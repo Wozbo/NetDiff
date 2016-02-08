@@ -18,9 +18,9 @@ namespace NetDiff.Test
         }
 
         [TestMethod]
-        public void Diff_ProducesAList()
+        public void Intersect_ProducesAList()
         {
-            var result = _calculator.Diff(
+            var result = _calculator.Intersect(
                 baseObj: new GenericDynamicObject(), 
                 evaluated: new GenericDynamicObject());
 
@@ -28,7 +28,7 @@ namespace NetDiff.Test
         }
 
         [TestMethod]
-        public void Diff_ListHasFieldsSet()
+        public void Intersect_ListHasFieldsSet()
         {
             var basePublicString = "This is the base object";
             var evaluatedPublicString = "This is the evaluated object";
@@ -41,7 +41,7 @@ namespace NetDiff.Test
                 num: 0.0,
                 pubString: evaluatedPublicString);
 
-            var result = _calculator.Diff(
+            var result = _calculator.Intersect(
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
@@ -51,7 +51,7 @@ namespace NetDiff.Test
         }
 
         [TestMethod]
-        public void Diff_ListDisplaysAppropriateNumberOfEqualFields()
+        public void Intersect_ListDisplaysAppropriateNumberOfEqualFields()
         {
             var identicalStrings = "These strings are identical";
             var notIdenticalString = "These strings are not identical";
@@ -68,7 +68,7 @@ namespace NetDiff.Test
                 pubString: identicalStrings,
                 secondString: notIdenticalString);
 
-            var result = _calculator.Diff(
+            var result = _calculator.Intersect(
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
@@ -79,6 +79,33 @@ namespace NetDiff.Test
             Assert.AreEqual(
                 expected: 1,
                 actual: result.Count(n => !n.ValuesMatch));
+        }
+
+        [TestMethod]
+        public void Intersection_YieldsOnlyCommonFields()
+        {
+            var identicalStrings = "These strings are identical";
+            var notIdenticalString = "These strings are not identical";
+            var identicalNumber = 0.000089;
+            var identicalNumberOffset = 0.000000000000123;
+
+            var baseObj = new GenericDynamicObject(
+                num: identicalNumber,
+                pubString: identicalStrings,
+                secondString: identicalStrings);
+
+            var evaluatedObject = new SlightlyDifferentObject(
+                num: identicalNumber + identicalNumberOffset,
+                pubString: identicalStrings,
+                secondString: notIdenticalString);
+
+            var result = _calculator.Intersect(
+                baseObj: baseObj,
+                evaluated: evaluatedObject);
+
+            Assert.AreEqual(
+                expected: 2,
+                actual: result.Count());
         }
     }
 }

@@ -17,23 +17,23 @@ namespace NetDiff
             _tolerance = tolerance;
         }
 
-        public ICollection<DiffedItem> Diff(DynamicObject baseObj, DynamicObject evaluated)
+        public ICollection<DiffedItem> Intersect(DynamicObject baseObj, DynamicObject evaluated)
         {
             var baseFields = GetObjectFields(baseObj);
             var evaluatedFields = GetObjectFields(evaluated);
 
             // Check for objects which lie in the intersection
-            var intersected = baseFields.Intersect(evaluatedFields, new FieldInfoIntersector());
+            var intersectedFields = baseFields.Intersect(evaluatedFields, new FieldInfoIntersector());
 
-            var diffed = baseFields.Select(field => new DiffedItem()
+            var intersected = intersectedFields.Select(field => new DiffedItem()
             {
                 Field = field,
                 BaseObjValue = field.GetValue(baseObj),
-                EvaluatedValue = field.GetValue(evaluated),
+                EvaluatedValue = GetCorrelate(field, evaluated).GetValue(evaluated),
                 Tolerance = _tolerance
             });
 
-            return diffed.ToList();
+            return intersected.ToList();
         }
 
         public FieldInfo[] GetObjectFields(DynamicObject obj)
@@ -42,6 +42,11 @@ namespace NetDiff
                 BindingFlags.Public |
                 BindingFlags.NonPublic |
                 BindingFlags.Instance);
+        }
+
+        public FieldInfo GetCorrelate(FieldInfo info, DynamicObject evaluated)
+        {
+            return evaluated.GetType().GetField(info.Name);
         }
     }
 }

@@ -12,12 +12,12 @@ namespace NetDiff
         public bool Equals(FieldInfo baseField, FieldInfo evalField)
         {
             return baseField.FieldType == evalField.FieldType
-                && baseField.Name == evalField.Name;
+                && string.Equals(baseField.Name, evalField.Name);
         }
 
         public int GetHashCode(FieldInfo obj)
         {
-            return obj.GetHashCode();
+            return obj.FieldType.GetHashCode();
         }
     }
 }
