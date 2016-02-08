@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,19 @@ namespace NetDiff
 
         public ICollection<DiffedItem> Diff(DynamicObject baseObj, DynamicObject evaluated)
         {
-            return new List<DiffedItem>();
+            var fields = baseObj.GetType().GetFields(
+                BindingFlags.Public |
+                BindingFlags.NonPublic |
+                BindingFlags.Instance);
+
+            var diffed = fields.Select(field => new DiffedItem()
+            {
+                Field = field,
+                baseObjValue = field.GetValue(baseObj),
+                evaluatedValue = field.GetValue(evaluated)
+            });
+
+            return diffed.ToList();
         }
     }
 }

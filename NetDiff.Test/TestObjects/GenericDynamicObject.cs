@@ -9,6 +9,8 @@ namespace NetDiff.Test.TestObjects
 {
     public class GenericDynamicObject : DynamicObject
     {
-
+        public string PublicString;
+        protected string ProtectedString = "";
+        private string _privateString = "";
     }
 }
