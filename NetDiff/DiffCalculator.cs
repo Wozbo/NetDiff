@@ -10,12 +10,15 @@ namespace NetDiff
 {
     public class DiffCalculator
     {
-        private double _tolerance;
+        private readonly double _tolerance;
+
+        #region Get___ Helpers
 
         public DiffCalculator(double tolerance=1e-6)
         {
             _tolerance = tolerance;
         }
+
 
         public FieldInfo[] GetObjectFields(DynamicObject obj)
         {
@@ -64,6 +67,14 @@ namespace NetDiff
             return exclusive.ToList();
         }
 
+        #endregion
+
+        /// <summary>
+        /// Finds all fields which are included in both of two dynamic objects
+        /// </summary>
+        /// <param name="baseObj">Baseline Object</param>
+        /// <param name="evaluated">The object you might be evaluating</param>
+        /// <returns>Collection of Items which are in both objects</returns>
         public ICollection<DiffedItem> Intersect(DynamicObject baseObj, DynamicObject evaluated)
         {
             var baseFields = GetObjectFields(baseObj);
@@ -80,6 +91,13 @@ namespace NetDiff
 
             return intersected.ToList();
         }
+
+        /// <summary>
+        /// Finds all fields which are mutually exclusive between two dynamic objects
+        /// </summary>
+        /// <param name="baseObj">Baseline Object</param>
+        /// <param name="evaluated">The object you might be evaluating</param>
+        /// <returns>Collection of Items which are mutually exclusive</returns>
         public ICollection<DiffedItem> MutuallyExclusive(DynamicObject baseObj, DynamicObject evaluated)
         {
             var evaluatedExclusives = GetExclusiveFields(evaluated, baseObj);

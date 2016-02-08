@@ -82,7 +82,7 @@ namespace NetDiff.Test
         }
 
         [TestMethod]
-        public void Intersection_YieldsOnlyCommonFields()
+        public void Intersect_YieldsOnlyCommonFields()
         {
             var identicalStrings = "These strings are identical";
             var identicalNumber = 0.000089;
@@ -107,7 +107,7 @@ namespace NetDiff.Test
         }
 
         [TestMethod]
-        public void Intersection_EqualityReflectedAcrossDifferentObjects()
+        public void Intersect_EqualityReflectedAcrossDifferentObjects()
         {
             var identicalStrings = "These strings are identical";
             var notIdenticalString = "These strings are not identical";
