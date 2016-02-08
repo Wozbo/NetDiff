@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDiff", "NetDiff\NetDiff.csproj", "{2E010848-B2C1-463B-A424-49C36F57C7FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDiff.Test", "NetDiff.Test\NetDiff.Test.csproj", "{80EBE509-F5AD-4110-A546-304F5FD66256}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E010848-B2C1-463B-A424-49C36F57C7FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E010848-B2C1-463B-A424-49C36F57C7FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E010848-B2C1-463B-A424-49C36F57C7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E010848-B2C1-463B-A424-49C36F57C7FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80EBE509-F5AD-4110-A546-304F5FD66256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80EBE509-F5AD-4110-A546-304F5FD66256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80EBE509-F5AD-4110-A546-304F5FD66256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80EBE509-F5AD-4110-A546-304F5FD66256}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
