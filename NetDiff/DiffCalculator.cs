@@ -27,8 +27,9 @@ namespace NetDiff
             var diffed = fields.Select(field => new DiffedItem()
             {
                 Field = field,
-                baseObjValue = field.GetValue(baseObj),
-                evaluatedValue = field.GetValue(evaluated)
+                BaseObjValue = field.GetValue(baseObj),
+                EvaluatedValue = field.GetValue(evaluated),
+                Tolerance = _tolerance
             });
 
             return diffed.ToList();

@@ -33,22 +33,21 @@ namespace NetDiff.Test
             var basePublicString = "This is the base object";
             var evaluatedPublicString = "This is the evaluated object";
 
-            var baseObj = new GenericDynamicObject()
-            {
-                PublicString = basePublicString
-            };
-            var evaluatedObject = new GenericDynamicObject()
-            {
-                PublicString = evaluatedPublicString
-            };
+            var baseObj = new GenericDynamicObject(
+                num: 10.0,
+                pubString: basePublicString);
+
+            var evaluatedObject = new GenericDynamicObject(
+                num: 0.0,
+                pubString: evaluatedPublicString);
 
             var result = _calculator.Diff(
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
             Assert.IsTrue(result.Any(
-                  n => string.Equals(n.baseObjValue, basePublicString)
-                    && string.Equals(n.evaluatedValue, evaluatedPublicString)));
+                  n => string.Equals(n.BaseObjValue, basePublicString)
+                    && string.Equals(n.EvaluatedValue, evaluatedPublicString)));
         }
     }
 }
