@@ -19,12 +19,13 @@ namespace NetDiff
 
         public ICollection<DiffedItem> Diff(DynamicObject baseObj, DynamicObject evaluated)
         {
-            var fields = baseObj.GetType().GetFields(
-                BindingFlags.Public |
-                BindingFlags.NonPublic |
-                BindingFlags.Instance);
+            var baseFields = GetObjectFields(baseObj);
+            var evaluatedFields = GetObjectFields(evaluated);
 
-            var diffed = fields.Select(field => new DiffedItem()
+            // Check for objects which lie in the intersection
+            var intersected = baseFields.Intersect(evaluatedFields, new FieldInfoIntersector());
+
+            var diffed = baseFields.Select(field => new DiffedItem()
             {
                 Field = field,
                 BaseObjValue = field.GetValue(baseObj),
@@ -33,6 +34,14 @@ namespace NetDiff
             });
 
             return diffed.ToList();
+        }
+
+        public FieldInfo[] GetObjectFields(DynamicObject obj)
+        {
+            return obj.GetType().GetFields(
+                BindingFlags.Public |
+                BindingFlags.NonPublic |
+                BindingFlags.Instance);
         }
     }
 }
