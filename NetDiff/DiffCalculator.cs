@@ -13,13 +13,16 @@ namespace NetDiff
         private readonly double _tolerance;
 
         #region Get___ Helpers
-
         public DiffCalculator(double tolerance=1e-6)
         {
             _tolerance = tolerance;
         }
 
-
+        /// <summary>
+        /// Gets all fields from an object
+        /// </summary>
+        /// <param name="obj">The object you want fields from</param>
+        /// <returns>Collection of FieldInfos</returns>
         public FieldInfo[] GetObjectFields(DynamicObject obj)
         {
             return obj.GetType().GetFields(
@@ -28,21 +31,42 @@ namespace NetDiff
                 BindingFlags.Instance);
         }
 
-        public FieldInfo GetCorrelate(FieldInfo info, DynamicObject evaluated)
+        /// <summary>
+        /// Finds a correlated FieldInfo in an object. Here, correlated refers to
+        /// an identical name, but that criteria is TBD.
+        /// </summary>
+        /// <param name="field">FieldInfo you're matching against</param>
+        /// <param name="obj">The object from which the correlate will come</param>
+        /// <returns>A Correlated FieldInfo (if it exists)</returns>
+        public FieldInfo GetCorrelate(FieldInfo field, DynamicObject obj)
         {
-            return evaluated
+            return obj
                 .GetType()
-                .GetField(info.Name);
+                .GetField(field.Name);
         }
 
-        public bool HasCorrelate(FieldInfo info, DynamicObject evaluated)
+        /// <summary>
+        /// Determines if a correlated FieldInfo exists for an object
+        /// </summary>
+        /// <param name="field">FieldInfo you're matching against</param>
+        /// <param name="obj">The object you're checking</param>
+        /// <returns>boolean indicating whether the correlate exists</returns>
+        public bool HasCorrelate(FieldInfo field, DynamicObject obj)
         {
-            return evaluated
+            return obj
                 .GetType()
                 .GetFields()
-                .Any(n => string.Equals(n.Name, info.Name));
+                .Any(n => string.Equals(n.Name, field.Name));
         }
 
+        /// <summary>
+        /// Gets a field value from an object. If a direct value exists, meaning 
+        /// that we don't need a correlate, then it is immediately returned. Otherwise,
+        /// NetDiff tries to find a correlate and return it. This action defaults to null.
+        /// </summary>
+        /// <param name="field">FieldInfo you're matching against</param>
+        /// <param name="obj">The object you're checking</param>
+        /// <returns>Value of the field for evaluated object</returns>
         public dynamic GetFieldValue(FieldInfo field, DynamicObject obj)
         {
             if (obj.GetType().GetFields().Contains(field))
@@ -59,6 +83,13 @@ namespace NetDiff
             return null;
         }
 
+        /// <summary>
+        /// Find all fields which are exclusive to a specific object compared to
+        /// another object.
+        /// </summary>
+        /// <param name="exclusiveTo">The object whose fields you're looking through</param>
+        /// <param name="antagonist">The object whose fields we are de-intersecting</param>
+        /// <returns>A list of exclusive fieldinfos</returns>
         public List<FieldInfo> GetExclusiveFields(DynamicObject exclusiveTo, DynamicObject antagonist)
         {
             var fields = GetObjectFields(exclusiveTo);
