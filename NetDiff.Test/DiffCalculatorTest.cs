@@ -49,5 +49,36 @@ namespace NetDiff.Test
                   n => string.Equals(n.BaseObjValue, basePublicString)
                     && string.Equals(n.EvaluatedValue, evaluatedPublicString)));
         }
+
+        [TestMethod]
+        public void Diff_ListDisplaysAppropriateNumberOfEqualFields()
+        {
+            var identicalStrings = "These strings are identical";
+            var notIdenticalString = "These strings are not identical";
+            var identicalNumber = 0.000089;
+            var identicalNumberOffset = 0.000000000000123;
+
+            var baseObj = new GenericDynamicObject(
+                num: identicalNumber,
+                pubString: identicalStrings,
+                secondString: identicalStrings);
+
+            var evaluatedObject = new GenericDynamicObject(
+                num: identicalNumber + identicalNumberOffset,
+                pubString: identicalStrings,
+                secondString: notIdenticalString);
+
+            var result = _calculator.Diff(
+                baseObj: baseObj,
+                evaluated: evaluatedObject);
+
+            Assert.AreEqual(
+                expected: 2,
+                actual: result.Count(n => n.ValuesMatch));
+
+            Assert.AreEqual(
+                expected: 1,
+                actual: result.Count(n => !n.ValuesMatch));
+        }
     }
 }

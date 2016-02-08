@@ -10,12 +10,13 @@ namespace NetDiff.Test.TestObjects
     public class GenericDynamicObject : DynamicObject
     {
         public string PublicString;
+        public string SecondaryString;
         public double PublicNum = 0.00;
-        private string _privateString = "";
 
-        public GenericDynamicObject(double num=0.0, string pubString="")
+        public GenericDynamicObject(double num=0.0, string pubString="", string secondString="")
         {
             PublicString = pubString;
+            SecondaryString = secondString;
             PublicNum = num;
         }
     }
