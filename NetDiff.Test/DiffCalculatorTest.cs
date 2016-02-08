@@ -85,6 +85,31 @@ namespace NetDiff.Test
         public void Intersection_YieldsOnlyCommonFields()
         {
             var identicalStrings = "These strings are identical";
+            var identicalNumber = 0.000089;
+
+            var baseObj = new GenericDynamicObject(
+                num: identicalNumber,
+                pubString: identicalStrings,
+                secondString: identicalStrings);
+
+            var evaluatedObject = new SlightlyDifferentObject(
+                num: identicalNumber,
+                pubString: identicalStrings,
+                secondString: identicalStrings);
+
+            var result = _calculator.Intersect(
+                baseObj: baseObj,
+                evaluated: evaluatedObject);
+
+            Assert.AreEqual(
+                expected: 2,
+                actual: result.Count);
+        }
+
+        [TestMethod]
+        public void Intersection_EqualityReflectedAcrossDifferentObjects()
+        {
+            var identicalStrings = "These strings are identical";
             var notIdenticalString = "These strings are not identical";
             var identicalNumber = 0.000089;
             var identicalNumberOffset = 0.000000000000123;
@@ -96,7 +121,7 @@ namespace NetDiff.Test
 
             var evaluatedObject = new SlightlyDifferentObject(
                 num: identicalNumber + identicalNumberOffset,
-                pubString: identicalStrings,
+                pubString: notIdenticalString,
                 secondString: notIdenticalString);
 
             var result = _calculator.Intersect(
@@ -104,8 +129,55 @@ namespace NetDiff.Test
                 evaluated: evaluatedObject);
 
             Assert.AreEqual(
-                expected: 2,
-                actual: result.Count());
+                expected: 1,
+                actual: result.Count(n => n.ValuesMatch));
+
+            Assert.AreEqual(
+                expected: 1,
+                actual: result.Count(n => !n.ValuesMatch));
+        }
+
+        [TestMethod]
+        public void GetExclusiveFields_YieldsOnlyExclusiveFields()
+        {
+            var baseObj = new GenericDynamicObject();
+            var evaluatedObject = new SlightlyDifferentObject();
+
+            var result = _calculator.GetExclusiveFields(baseObj, evaluatedObject);
+
+            Assert.IsTrue(result.ToList()
+                .Any(n => string.Equals(n.Name, "SecondaryString")));
+        }
+
+        [TestMethod]
+        public void MutuallyExclusive_EqualityReflectedAcrossDifferentObjects()
+        {
+            var identicalStrings = "These strings are identical";
+            var notIdenticalString = "These strings are not identical";
+            var identicalNumber = 0.000089;
+            var identicalNumberOffset = 0.000000000000123;
+
+            var baseObj = new GenericDynamicObject(
+                num: identicalNumber,
+                pubString: identicalStrings,
+                secondString: identicalStrings);
+
+            var evaluatedObject = new SlightlyDifferentObject(
+                num: identicalNumber + identicalNumberOffset,
+                pubString: notIdenticalString,
+                secondString: notIdenticalString);
+
+            var result = _calculator.MutuallyExclusive(
+                baseObj: baseObj,
+                evaluated: evaluatedObject);
+
+            Assert.AreEqual(
+                expected: 1,
+                actual: result.Count(n => n.BaseObjValue != null));
+
+            Assert.AreEqual(
+                expected: 1,
+                actual: result.Count(n => n.EvaluatedValue != null));
         }
     }
 }
