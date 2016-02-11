@@ -73,7 +73,7 @@ namespace NetDiff.Test
                 evaluated: evaluatedObject);
 
             Assert.AreEqual(
-                expected: 2,
+                expected: 3,
                 actual: result.Count(n => n.ValuesMatch));
 
             Assert.AreEqual(
@@ -147,6 +147,30 @@ namespace NetDiff.Test
 
             Assert.IsTrue(result.ToList()
                 .Any(n => string.Equals(n.Name, "SecondaryString")));
+        }
+
+        [TestMethod]
+        public void GetObjectFields_YieldsOnlyObjects()
+        {
+            var baseObj = new GenericDynamicObject();
+
+            var result = _calculator.GetOjbectFields(baseObj);
+
+            Assert.AreEqual(
+                expected: 1,
+                actual: result.Count());
+        }
+
+        [TestMethod]
+        public void GetNonObjectFields_YieldsOnlyNonObjects()
+        {
+            var baseObj = new GenericDynamicObject();
+
+            var result = _calculator.GetNonOjbectFields(baseObj);
+
+            Assert.AreEqual(
+                expected: 3,
+                actual: result.Count());
         }
 
         [TestMethod]

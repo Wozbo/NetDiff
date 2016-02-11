@@ -11,13 +11,19 @@ namespace NetDiff.Test.TestObjects
     {
         public string PublicString;
         public string SecondaryString;
-        public double PublicNum = 0.00;
+        public double PublicNum;
+        public SubObject SubObj;
 
-        public GenericDynamicObject(double num=0.0, string pubString="", string secondString="")
+        public GenericDynamicObject(
+            double num=0.0, 
+            string pubString="", 
+            string secondString="",
+            SubObject subobj=null)
         {
             PublicString = pubString;
             SecondaryString = secondString;
             PublicNum = num;
+            SubObj = subobj;
         }
     }
 }

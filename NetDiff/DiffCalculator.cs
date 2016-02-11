@@ -23,12 +23,50 @@ namespace NetDiff
         /// </summary>
         /// <param name="obj">The object you want fields from</param>
         /// <returns>Collection of FieldInfos</returns>
-        public FieldInfo[] GetObjectFields(DynamicObject obj)
+        public FieldInfo[] GetFields(DynamicObject obj)
         {
             return obj.GetType().GetFields(
                 BindingFlags.Public |
                 BindingFlags.NonPublic |
                 BindingFlags.Instance);
+        }
+
+        /// <summary>
+        /// Gets all fields from an object which are objects
+        /// </summary>
+        /// <param name="obj">The object you want fields from</param>
+        /// <returns>Collection of FieldInfos</returns>
+        public FieldInfo[] GetOjbectFields(DynamicObject obj)
+        {
+            // Any thoughts on this?
+            var results = GetFields(obj)
+                .Where(IsObjectField)
+                .ToArray();
+            return results;
+        }
+
+        /// <summary>
+        /// Gets all non-object fields from an object
+        /// </summary>
+        /// <param name="obj">The object you want fields from</param>
+        /// <returns>Collection of FieldInfos</returns>
+        public FieldInfo[] GetNonOjbectFields(DynamicObject obj)
+        {
+            var results = GetFields(obj)
+                .Where(n => !IsObjectField(n))
+                .ToArray();
+            return results;
+        }
+
+        /// <summary>
+        /// Checks to see if a field's type is an object.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public bool IsObjectField(FieldInfo field)
+        {
+            return field.FieldType.BaseType != null
+                && field.FieldType.BaseType.FullName == "System.Dynamic.DynamicObject";
         }
 
         /// <summary>
@@ -92,7 +130,7 @@ namespace NetDiff
         /// <returns>A list of exclusive fieldinfos</returns>
         public List<FieldInfo> GetExclusiveFields(DynamicObject exclusiveTo, DynamicObject antagonist)
         {
-            var fields = GetObjectFields(exclusiveTo);
+            var fields = GetFields(exclusiveTo);
             var exclusive = fields.Where(n => !HasCorrelate(n, antagonist));
 
             return exclusive.ToList();
@@ -108,8 +146,8 @@ namespace NetDiff
         /// <returns>Collection of Items which are in both objects</returns>
         public ICollection<DiffedItem> Intersect(DynamicObject baseObj, DynamicObject evaluated)
         {
-            var baseFields = GetObjectFields(baseObj);
-            var evaluatedFields = GetObjectFields(evaluated);
+            var baseFields = GetFields(baseObj);
+            var evaluatedFields = GetFields(evaluated);
             var intersectedFields = baseFields.Intersect(evaluatedFields, new FieldInfoIntersector());
 
             var intersected = intersectedFields.Select(field => new DiffedItem()
