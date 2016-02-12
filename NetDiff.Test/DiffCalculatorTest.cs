@@ -18,6 +18,33 @@ namespace NetDiff.Test
         }
 
         [TestMethod]
+        public void GetCorrelate_DoesNotPullEqualNameDifferentType()
+        {
+            var baseObj = new GenericDynamicObject();
+            var evaluated = new AlmostGenericDynamicObject();
+
+            var fields = _calculator.GetFields(baseObj);
+            var result = _calculator.HasCorrelate(
+                field: fields.First(n => n.Name.Equals("SecondaryString")),
+                obj: evaluated);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void IsObjectField_DiscernsObject()
+        {
+            var baseObj = new GenericDynamicObject(subobj: new SubObject("derr"));
+
+            var fields = _calculator.GetFields(baseObj);
+            var result = _calculator.IsObjectField(
+                field: fields.First(n => n.Name.Equals("SubObj")),
+                obj: baseObj);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
         public void Intersect_ProducesAList()
         {
             var result = _calculator.Intersect(

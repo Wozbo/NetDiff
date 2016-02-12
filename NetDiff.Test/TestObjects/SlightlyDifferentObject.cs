@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetDiff.Test.TestObjects
 {
-    public class SlightlyDifferentObject : DynamicObject
+    public class SlightlyDifferentObject
     {
         public string PublicString;
         public string SecondString;

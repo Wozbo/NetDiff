@@ -23,7 +23,7 @@ namespace NetDiff
         /// </summary>
         /// <param name="obj">The object you want fields from</param>
         /// <returns>Collection of FieldInfos</returns>
-        public FieldInfo[] GetFields(DynamicObject obj)
+        public FieldInfo[] GetFields(object obj)
         {
             return obj.GetType().GetFields(
                   BindingFlags.Public
@@ -36,7 +36,7 @@ namespace NetDiff
         /// </summary>
         /// <param name="obj">The object you want fields from</param>
         /// <returns>Collection of FieldInfos</returns>
-        public FieldInfo[] GetOjbectFields(DynamicObject obj)
+        public FieldInfo[] GetOjbectFields(object obj)
         {
             return GetFields(obj)
                 .Where(n => IsObjectField(n, obj))
@@ -48,7 +48,7 @@ namespace NetDiff
         /// </summary>
         /// <param name="obj">The object you want fields from</param>
         /// <returns>Collection of FieldInfos</returns>
-        public FieldInfo[] GetNonOjbectFields(DynamicObject obj)
+        public FieldInfo[] GetNonOjbectFields(object obj)
         {
             var results = GetFields(obj)
                 .Where(n => !IsObjectField(n, obj))
@@ -60,8 +60,9 @@ namespace NetDiff
         /// Checks to see if a field's type is an object.
         /// </summary>
         /// <param name="field"></param>
+        /// <param name="obj"></param>
         /// <returns></returns>
-        public bool IsObjectField(FieldInfo field, DynamicObject obj)
+        public bool IsObjectField(FieldInfo field, object obj)
         {
             var fieldValue = field.GetValue(obj);
 
@@ -78,7 +79,7 @@ namespace NetDiff
         /// <param name="field">FieldInfo you're matching against</param>
         /// <param name="obj">The object from which the correlate will come</param>
         /// <returns>A Correlated FieldInfo (if it exists)</returns>
-        public FieldInfo GetCorrelate(FieldInfo field, DynamicObject obj)
+        public FieldInfo GetCorrelate(FieldInfo field, object obj)
         {
             return obj
                 .GetType()
@@ -91,10 +92,11 @@ namespace NetDiff
         /// <param name="field">FieldInfo you're matching against</param>
         /// <param name="obj">The object you're checking</param>
         /// <returns>boolean indicating whether the correlate exists</returns>
-        public bool HasCorrelate(FieldInfo field, DynamicObject obj)
+        public bool HasCorrelate(FieldInfo field, object obj)
         {
             return GetFields(obj)
-                .Any(n => string.Equals(n.Name, field.Name));
+                .Any(n => string.Equals(n.Name, field.Name)
+                       && n.FieldType == field.FieldType);
         }
 
         /// <summary>
@@ -105,7 +107,7 @@ namespace NetDiff
         /// <param name="field">FieldInfo you're matching against</param>
         /// <param name="obj">The object you're checking</param>
         /// <returns>Value of the field for evaluated object</returns>
-        public dynamic GetFieldValue(FieldInfo field, DynamicObject obj)
+        public dynamic GetFieldValue(FieldInfo field, object obj)
         {
             // Check if the field exists 
             if (obj.GetType().GetFields().Contains(field))
@@ -132,8 +134,8 @@ namespace NetDiff
         /// <param name="antagonist">The object whose fields we are de-intersecting</param>
         /// <returns>A list of exclusive fieldinfos</returns>
         public List<FieldInfo> GetExclusiveFields(
-            DynamicObject exclusiveTo, 
-            DynamicObject antagonist)
+            object exclusiveTo, 
+            object antagonist)
         {
             var fields = GetFields(exclusiveTo);
 
@@ -151,8 +153,8 @@ namespace NetDiff
         /// <param name="evaluated">The object you might be evaluating</param>
         /// <returns>Collection of Items which are in both objects</returns>
         public ICollection<DiffedItem> Intersect(
-            DynamicObject baseObj, 
-            DynamicObject evaluated)
+            object baseObj, 
+            object evaluated)
         {
             // Get non-object fields for each object
             var baseFields = GetFields(baseObj);
@@ -173,8 +175,8 @@ namespace NetDiff
         /// <param name="evaluated">The object you might be evaluating</param>
         /// <returns>Collection of Items which are mutually exclusive</returns>
         public ICollection<DiffedItem> MutuallyExclusive(
-            DynamicObject baseObj, 
-            DynamicObject evaluated)
+            object baseObj, 
+            object evaluated)
         {
             // Get fields which exist in one object but not the other
             var fullExclusives = GetExclusiveFields(baseObj, antagonist: evaluated);
@@ -196,8 +198,8 @@ namespace NetDiff
         /// <returns>Collection of Items which are mutually exclusive</returns>
         public ICollection<DiffedItem> Assemble(
             IEnumerable<FieldInfo> fields, 
-            DynamicObject baseObj, 
-            DynamicObject evaluated)
+            object baseObj, 
+            object evaluated)
         {
             var exclusives = fields.Select(field => new DiffedItem()
             {

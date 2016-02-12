@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace NetDiff.Test.TestObjects
 {
-    public class GenericDynamicObject
+    public class AlmostGenericDynamicObject
     {
         public string PublicString;
-        public string SecondaryString;
+        public double SecondaryString;
         public double PublicNum;
         public SubObject SubObj;
 
-        public GenericDynamicObject(
+        public AlmostGenericDynamicObject(
             double num=0.0, 
             string pubString="", 
-            string secondString="",
+            double secondString=0.0,
             SubObject subobj=null)
         {
             PublicString = pubString;

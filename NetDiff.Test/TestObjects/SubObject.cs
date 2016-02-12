@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetDiff.Test.TestObjects
 {
-    public class SubObject: DynamicObject
+    public class SubObject
     {
         public string Name;
 
