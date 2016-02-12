@@ -152,8 +152,7 @@ namespace NetDiff.Test
         [TestMethod]
         public void GetObjectFields_YieldsOnlyObjects()
         {
-            var baseObj = new GenericDynamicObject();
-
+            var baseObj = new GenericDynamicObject(subobj: new SubObject("An Object"));
             var result = _calculator.GetOjbectFields(baseObj);
 
             Assert.AreEqual(
@@ -164,8 +163,7 @@ namespace NetDiff.Test
         [TestMethod]
         public void GetNonObjectFields_YieldsOnlyNonObjects()
         {
-            var baseObj = new GenericDynamicObject();
-
+            var baseObj = new GenericDynamicObject(subobj: new SubObject("An Object"));
             var result = _calculator.GetNonOjbectFields(baseObj);
 
             Assert.AreEqual(
