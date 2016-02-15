@@ -73,7 +73,7 @@ namespace NetDiff.Test
                 evaluated: evaluatedObject);
 
             Assert.IsTrue(result.Any(
-                  n => string.Equals(n.BaseObjValue, basePublicString)
+                  n => string.Equals(n.BaseValue, basePublicString)
                     && string.Equals(n.EvaluatedValue, evaluatedPublicString)));
         }
 
@@ -222,7 +222,7 @@ namespace NetDiff.Test
 
             Assert.AreEqual(
                 expected: 1,
-                actual: result.Count(n => n.BaseObjValue != null));
+                actual: result.Count(n => n.BaseValue!= null));
 
             Assert.AreEqual(
                 expected: 1,

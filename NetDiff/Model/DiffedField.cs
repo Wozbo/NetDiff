@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace NetDiff
 {
-    public class DiffedItem
+    public class DiffedField : DiffedItem
     {
         public FieldInfo Field;
-        public dynamic BaseObjValue, EvaluatedValue;
         public double Tolerance;
 
-        public bool ValuesMatch => Equals(BaseObjValue, EvaluatedValue);
-
-        public bool Equals(dynamic baseObj, dynamic evaluatedObj)
+        public override bool Equals(dynamic baseObj, dynamic evaluatedObj)
         {
             // Use tolerances for floating point equalities
             if (Field.FieldType == typeof (double))

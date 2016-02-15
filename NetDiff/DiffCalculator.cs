@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetDiff
 {
@@ -146,6 +142,8 @@ namespace NetDiff
 
         #endregion
 
+        
+
         /// <summary>
         /// Finds all fields which are included in both of two dynamic objects
         /// </summary>
@@ -201,15 +199,17 @@ namespace NetDiff
             object baseObj, 
             object evaluated)
         {
-            var exclusives = fields.Select(field => new DiffedItem()
+            var exclusives = fields.Select(field => new DiffedField()
             {
                 Field = field,
-                BaseObjValue = GetFieldValue(field, baseObj),
+                BaseValue = GetFieldValue(field, baseObj),
                 EvaluatedValue = GetFieldValue(field, evaluated),
                 Tolerance = _tolerance
             });
 
-            return exclusives.ToList();
+            return exclusives
+                .Cast<DiffedItem>()
+                .ToList();
         } 
     }
 }

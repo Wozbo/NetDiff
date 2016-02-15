@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiffCalculator.cs" />
-    <Compile Include="DiffedItem.cs" />
+    <Compile Include="Model\DiffedField.cs" />
+    <Compile Include="Model\DiffedItem.cs" />
+    <Compile Include="Model\DiffedObject.cs" />
     <Compile Include="FieldInfoIntersector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
