@@ -32,7 +32,7 @@ namespace NetDiff
         /// </summary>
         /// <param name="obj">The object you want fields from</param>
         /// <returns>Collection of FieldInfos</returns>
-        public FieldInfo[] GetOjbectFields(object obj)
+        public FieldInfo[] GetObjectFields(object obj)
         {
             return GetFields(obj)
                 .Where(n => IsObjectField(n, obj))
@@ -44,7 +44,7 @@ namespace NetDiff
         /// </summary>
         /// <param name="obj">The object you want fields from</param>
         /// <returns>Collection of FieldInfos</returns>
-        public FieldInfo[] GetNonOjbectFields(object obj)
+        public FieldInfo[] GetNonObjectFields(object obj)
         {
             var results = GetFields(obj)
                 .Where(n => !IsObjectField(n, obj))
@@ -106,7 +106,7 @@ namespace NetDiff
         public dynamic GetFieldValue(FieldInfo field, object obj)
         {
             // Check if the field exists 
-            if (obj.GetType().GetFields().Contains(field))
+            if (GetFields(obj).Contains(field))
             {
                 return field.GetValue(obj);
             }
@@ -136,13 +136,56 @@ namespace NetDiff
             var fields = GetFields(exclusiveTo);
 
             // Find the fields where the antagonist doesn't have a correlate; return it
-            var exclusive = fields.Where(n => !HasCorrelate(n, antagonist));
-            return exclusive.ToList();
+            return fields
+                .Where(n => !HasCorrelate(n, antagonist))
+                .ToList();
+        }
+
+        public List<FieldInfo> GetMutualObjectFields(
+            object baseObj,
+            object evaluated)
+        {
+            var baseObjectFields = GetNonObjectFields(baseObj);
+            return baseObjectFields
+                .Where(n => HasCorrelate(n, evaluated)) as List<FieldInfo>
+                   ?? new List<FieldInfo>();
         }
 
         #endregion
 
-        
+
+        /// <summary>
+        /// Diff two objects
+        /// </summary>
+        /// <param name="baseObj"></param>
+        /// <param name="evaluated"></param>
+        /// <returns></returns>
+        public DiffedObject DiffObjects(
+            object baseObj,
+            object evaluated)
+        {
+            // Handle Intersected Fields
+            var results = Intersect(baseObj, evaluated).ToList();
+
+            // Handle Exclusive Fields for BaseObj
+            results.AddRange(MutuallyExclusive(baseObj, evaluated));
+
+            // Recursively handle each intersected object field
+            results.AddRange(GetObjectFields(baseObj)
+                .Select(mutualField => DiffObjects(
+                    baseObj: GetFieldValue(mutualField, baseObj), 
+                    evaluated: GetFieldValue(GetCorrelate(mutualField, evaluated), evaluated)))
+                .Cast<DiffedItem>());
+
+            // Handle each non-intersected object field...
+
+            return new DiffedObject
+            {
+                BaseValue = baseObj,
+                EvaluatedValue = evaluated,
+                Items = results
+            };
+        }
 
         /// <summary>
         /// Finds all fields which are included in both of two dynamic objects
@@ -155,8 +198,8 @@ namespace NetDiff
             object evaluated)
         {
             // Get non-object fields for each object
-            var baseFields = GetFields(baseObj);
-            var evaluatedFields = GetFields(evaluated);
+            var baseFields = GetNonObjectFields(baseObj);
+            var evaluatedFields = GetNonObjectFields(evaluated);
 
             // Perform Intersection using the FieldInfoIntersector
             var intersectedFields = baseFields.Intersect(evaluatedFields, new FieldInfoIntersector());

@@ -9,6 +9,12 @@ namespace NetDiff
 {
     public class DiffedItem
     {
+        public DiffedItem(dynamic baseObj=null, dynamic eval=null)
+        {
+            BaseValue = baseObj;
+            EvaluatedValue = eval;
+        }
+
         public dynamic BaseValue, EvaluatedValue;
 
         public bool ValuesMatch => Equals(BaseValue, EvaluatedValue);

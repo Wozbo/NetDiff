@@ -12,7 +12,7 @@ namespace NetDiff
 
         public override bool Equals(dynamic baseObj, dynamic evaluatedObj)
         {
-            return Items.Any(d => !d.ValuesMatch);
+            return Items.All(d => d.ValuesMatch);
         }
     }
 }
