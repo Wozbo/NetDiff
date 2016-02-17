@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetDiff.Test</RootNamespace>
     <AssemblyName>NetDiff.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="csharp-extensions, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\csharp-extensions.1.2.5\lib\net46\csharp-extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="TestApiCore, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -59,20 +64,33 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ObjectDiffTest.cs" />
-    <Compile Include="FieldDiffTest.cs" />
+    <Compile Include="Integration\ListDiffTest.cs" />
+    <Compile Include="Integration\ObjectDiffTest.cs" />
+    <Compile Include="Integration\FieldDiffTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestObjects\AlmostGenericDynamicObject.cs" />
     <Compile Include="TestObjects\GenericDynamicObjectCopy.cs" />
+    <Compile Include="TestObjects\NestingObject.cs" />
+    <Compile Include="TestObjects\ObjectWithList.cs" />
+    <Compile Include="TestObjects\ObjectWithProperties.cs" />
     <Compile Include="TestObjects\SubObject.cs" />
     <Compile Include="TestObjects\SlightlyDifferentObject.cs" />
     <Compile Include="TestObjects\GenericDynamicObject.cs" />
+    <Compile Include="Unit\DiffCalculator\DiffListTest.cs" />
+    <Compile Include="Unit\DiffCalculator\DiffObjectsTest.cs" />
+    <Compile Include="Unit\Extensions\GetNonObjectInstanceFieldsTest.cs" />
+    <Compile Include="Unit\Extensions\GetObjectInstanceFieldsTest.cs" />
+    <Compile Include="Unit\Extensions\IsObjectFieldTest.cs" />
+    <Compile Include="Unit\Model\DiffedObject\WithoutMatchingTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetDiff\NetDiff.csproj">
       <Project>{2E010848-B2C1-463B-A424-49C36F57C7FC}</Project>
       <Name>NetDiff</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

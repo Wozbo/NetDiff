@@ -15,8 +15,8 @@ namespace NetDiff.Test.TestObjects
         public SubObject SubObj;
 
         public GenericDynamicObject(
-            double num=0.0, 
-            string pubString="", 
+            double num=0.0,
+            string pubString="",
             string secondString="",
             SubObject subobj=null)
         {

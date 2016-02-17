@@ -9,19 +9,23 @@ namespace NetDiff
 {
     public class DiffedItem
     {
-        public DiffedItem(dynamic baseObj=null, dynamic eval=null)
+        public string Message;
+
+        public DiffedItem(object baseObj=null, object eval=null, string message = "")
         {
             BaseValue = baseObj;
             EvaluatedValue = eval;
+            Message = message;
+
         }
 
-        public dynamic BaseValue, EvaluatedValue;
+        public object BaseValue, EvaluatedValue;
 
         public bool ValuesMatch => Equals(BaseValue, EvaluatedValue);
 
         public virtual bool Equals(dynamic baseObj, dynamic evaluatedObj)
         {
-            return false;
+            return baseObj.Equals(evaluatedObj);
         }
     }
 }
