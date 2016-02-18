@@ -15,7 +15,7 @@ namespace NetDiff
         public DiffedItem(
             object baseObj=null, 
             object eval=null, 
-            DiffValue message = DiffValue.NotEqual)
+            DiffValue message = DiffValue.NotEvaluated)
         {
             BaseValue = baseObj;
             EvaluatedValue = eval;

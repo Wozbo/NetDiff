@@ -134,7 +134,7 @@ namespace NetDiff
                     {
                         BaseValue = baseObj,
                         EvaluatedValue = evaluated,
-                        Message = DiffValue.TypesDiffer
+                        Message = DiffValue.DiffersInType
                     };
                 }
 
@@ -174,6 +174,7 @@ namespace NetDiff
             var baseSize = baseObj.Count();
             var antagonistSize = antagonist.Count();
 
+            // If these aren't the same size, don't run the Diff, just mention that it differs in length.
             if (baseSize != antagonistSize)
             {
                 var result = new DiffedItem
@@ -187,16 +188,33 @@ namespace NetDiff
                 return results;
             }
 
+            // Sort the Base
+            var sortedBase = baseObj.ToList();
+            sortedBase.Sort();
+
+            // Sort the Eval
+            var sortedAntagonist = antagonist.ToList();
+            sortedAntagonist.Sort();
+
+            // Check the order
+            var orderEqualities = sortedBase.Zip(sortedAntagonist, (sbase, sant) => sbase.Equals(sant));
+            var valuesSimilar = orderEqualities.All(n => n);
+             
+            // Check values    
             foreach (var item in baseObj.Zip(antagonist))
             {
                 var result = DiffObjects(
                     baseObj: item.Key,
                     evaluated: item.Value);
-
+                
                 results.Add(result);
             }
 
-            // TODO: how to handle sorting issues -- write now sorting matters and will error if not the same
+            // For anything that doesn't match, the order must differ.
+            foreach (var item in results.Where(n => !n.ValuesMatch))
+            {
+               item.Message = DiffValue.DiffersInOrder;
+            }
 
             return results;
         }

@@ -16,7 +16,7 @@ namespace NetDiff
             object baseObj = null,
             object eval = null,
             IEnumerable<DiffedItem> items = null,
-            DiffValue message = DiffValue.NotEqual) 
+            DiffValue message = DiffValue.NotApplicable) 
             : base(baseObj, eval, message)
         {
             Items = items ?? new List<DiffedItem>();

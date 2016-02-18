@@ -32,7 +32,7 @@ namespace NetDiff.Test.Unit.DiffCalculator
 
             var result = baseObject.DiffAgainst(antagonist);
 
-            Assert.AreEqual(DiffValue.TypesDiffer, result.Message);
+            Assert.AreEqual(DiffValue.DiffersInType, result.Message);
         }
     }
 }

@@ -8,10 +8,10 @@ namespace NetDiff.Model
 {
     public enum DiffValue
     {
-        NotEqual = 0,
-        Equal = 1,
-        DiffersInLength = 2,
-        DiffersInOrder = 3,
-        TypesDiffer = 4
+        NotEvaluated = -1,
+        NotApplicable = 0,
+        DiffersInLength = 1,
+        DiffersInOrder = 2,
+        DiffersInType = 3
     }
 }
