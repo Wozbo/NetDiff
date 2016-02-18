@@ -91,6 +91,13 @@ namespace NetDiff
                    ?? new List<FieldInfo>();
         }
 
+        private static bool ContentIsEqual(IEnumerable<object> sortedBase, IEnumerable<object> sortedAntagonist)
+        {
+            var contentIsEqual = sortedBase
+                .Zip(sortedAntagonist, (sbase, sant) => sbase.Equals(sant)).All(n => n);
+            return contentIsEqual;
+        }
+
         #endregion
 
         #region Aliases
@@ -110,14 +117,25 @@ namespace NetDiff
             object baseObj,
             object evaluated)
         {
+            // Validate that the objects are not null
             if (baseObj == null || evaluated == null)
             {
-                return new DiffedNull {BaseValue = baseObj, EvaluatedValue = evaluated};
+                return new DiffedNull
+                {
+                    BaseValue = baseObj,
+                    EvaluatedValue = evaluated
+                };
             }
 
+            // Check to see if it's primitive
             if (baseObj.IsPrimitive())
             {
-                return new DiffedPrimitive {BaseValue = baseObj, EvaluatedValue = evaluated, Tolerance = _tolerance};
+                return new DiffedPrimitive
+                {
+                    BaseValue = baseObj,
+                    EvaluatedValue = evaluated,
+                    Tolerance = _tolerance
+                };
             }
 
             // Handle Intersected Fields
@@ -134,7 +152,7 @@ namespace NetDiff
                     {
                         BaseValue = baseObj,
                         EvaluatedValue = evaluated,
-                        Message = DiffValue.DiffersInType
+                        Message = DiffMessage.DiffersInType
                     };
                 }
 
@@ -181,7 +199,7 @@ namespace NetDiff
                 {
                     BaseValue = baseObj,
                     EvaluatedValue = antagonist,
-                    Message = DiffValue.DiffersInLength
+                    Message = DiffMessage.DiffersInLength
                 };
 
                 results.Add(result);
@@ -195,10 +213,6 @@ namespace NetDiff
             // Sort the Eval
             var sortedAntagonist = antagonist.ToList();
             sortedAntagonist.Sort();
-
-            // Check the order
-            var orderEqualities = sortedBase.Zip(sortedAntagonist, (sbase, sant) => sbase.Equals(sant));
-            var valuesSimilar = orderEqualities.All(n => n);
              
             // Check values    
             foreach (var item in baseObj.Zip(antagonist))
@@ -210,10 +224,15 @@ namespace NetDiff
                 results.Add(result);
             }
 
+            // Validate that the content is similar
+            var errorMessage = ContentIsEqual(sortedBase, sortedAntagonist)
+                ? DiffMessage.DiffersInOrder
+                : DiffMessage.DiffersInContent;
+
             // For anything that doesn't match, the order must differ.
             foreach (var item in results.Where(n => !n.ValuesMatch))
             {
-               item.Message = DiffValue.DiffersInOrder;
+                item.Message = errorMessage;
             }
 
             return results;
@@ -227,13 +246,22 @@ namespace NetDiff
             return result;
         }
 
+        /// <summary>
+        /// Diff a field 
+        /// </summary>
+        /// <param name="forField"></param>
+        /// <param name="baseObj"></param>
+        /// <param name="antagonist"></param>
+        /// <returns></returns>
         private DiffedItem Diff(FieldInfo forField, object baseObj, object antagonist)
         {
             var valueOfBase = GetValue(forField, baseObj);
             var otherFieldValue = GetFieldInfo(matching: forField, fromObject: antagonist);
             var valueOfEvaluated = GetValue(otherFieldValue, antagonist);
 
-            return DiffObjects(baseObj: valueOfBase, evaluated: valueOfEvaluated);
+            return DiffObjects(
+                baseObj: valueOfBase, 
+                evaluated: valueOfEvaluated);
         }
 
 

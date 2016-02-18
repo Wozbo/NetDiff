@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace NetDiff.Model
 {
-    public enum DiffValue
+    public enum DiffMessage
     {
-        NotEvaluated = -1,
         NotApplicable = 0,
         DiffersInLength = 1,
         DiffersInOrder = 2,
-        DiffersInType = 3
+        DiffersInType = 3,
+        DiffersInContent = 4
     }
 }

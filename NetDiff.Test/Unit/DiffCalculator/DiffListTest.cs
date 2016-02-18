@@ -48,11 +48,37 @@ namespace NetDiff.Test.Unit.DiffCalculator
 
             Assert.AreEqual(
                 expected: 3,
-                actual: result.Count(n => n.Message.Equals(DiffValue.DiffersInOrder)) );
+                actual: result.Count(n => n.Message.Equals(DiffMessage.DiffersInOrder)) );
 
             Assert.AreEqual(
                 expected: 2,
-                actual: secondResult.Count(n => n.Message.Equals(DiffValue.DiffersInOrder)) );
+                actual: secondResult.Count(n => n.Message.Equals(DiffMessage.DiffersInOrder)) );
+        }
+
+
+        [TestMethod]
+        public void TwoListsDemonstrateThatContentDiffers()
+        {
+            var a = new List<int> { 1, 2, 3 };
+            var b = new List<int> { 2, 3, 1 };
+            var c = new List<int> { 3, 3, 2 };
+
+            var calculator = new NetDiff.DiffCalculator();
+            var result = calculator.DiffList(
+                baseObj: a.Cast<object>(),
+                antagonist: b.Cast<object>());
+
+            var secondResult = calculator.DiffList(
+                baseObj: a.Cast<object>(),
+                antagonist: c.Cast<object>());
+
+            Assert.AreEqual(
+                expected: 3,
+                actual: result.Count(n => n.Message.Equals(DiffMessage.DiffersInOrder)));
+
+            Assert.AreEqual(
+                expected: 3,
+                actual: secondResult.Count(n => n.Message.Equals(DiffMessage.DiffersInContent)));
         }
 
     }

@@ -10,12 +10,12 @@ namespace NetDiff
 {
     public class DiffedItem
     {
-        public DiffValue Message;
+        public DiffMessage Message;
 
         public DiffedItem(
-            object baseObj=null, 
-            object eval=null, 
-            DiffValue message = DiffValue.NotEvaluated)
+            object baseObj = null, 
+            object eval = null, 
+            DiffMessage message = DiffMessage.NotApplicable)
         {
             BaseValue = baseObj;
             EvaluatedValue = eval;
@@ -26,7 +26,7 @@ namespace NetDiff
 
         public bool ValuesMatch => Equals(BaseValue, EvaluatedValue);
 
-        public virtual bool Equals(dynamic baseObj, dynamic evaluatedObj)
+        public virtual bool Equals(object baseObj, object evaluatedObj)
         {
             return baseObj.Equals(evaluatedObj);
         }
