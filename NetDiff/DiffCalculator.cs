@@ -131,15 +131,16 @@ namespace NetDiff
                 if (!evaluated.IsIterable())
                 {
                     return new DiffedItem
-                           {
-                               BaseValue = baseObj,
-                               EvaluatedValue = evaluated,
-                               Message = "Types are not both iterable"
-                           };
+                    {
+                        BaseValue = baseObj,
+                        EvaluatedValue = evaluated,
+                        Message = DiffValue.TypesDiffer
+                    };
                 }
-                var oe = ((IEnumerable)baseObj).Cast<object>().ToList();
-                var ae = ((IEnumerable)evaluated).Cast<object>().ToList();
-                var listResults = DiffList(oe, ae);
+
+                var baseList = ((IEnumerable)baseObj).Cast<object>().ToList();
+                var evalList = ((IEnumerable)evaluated).Cast<object>().ToList();
+                var listResults = DiffList(baseList, evalList);
 
                 results.AddRange(listResults);
             }
@@ -151,8 +152,6 @@ namespace NetDiff
                 results.AddRange(fields);
             }
 
-            // Handle each non-intersected object field...
-
             return new DiffedObject
             {
                 BaseValue = baseObj,
@@ -161,6 +160,12 @@ namespace NetDiff
             };
         }
 
+        /// <summary>
+        /// Diff two lists. Does not currently 
+        /// </summary>
+        /// <param name="baseObj"></param>
+        /// <param name="antagonist"></param>
+        /// <returns></returns>
         public IEnumerable<DiffedItem> DiffList(IEnumerable<object> baseObj, IEnumerable<object> antagonist)
         {
             var results = new List<DiffedItem>();
@@ -172,11 +177,11 @@ namespace NetDiff
             if (baseSize != antagonistSize)
             {
                 var result = new DiffedItem
-                       {
-                           BaseValue = baseObj,
-                           EvaluatedValue = antagonist,
-                           Message = "Enumerables are not the same length"
-                       };
+                {
+                    BaseValue = baseObj,
+                    EvaluatedValue = antagonist,
+                    Message = DiffValue.DiffersInLength
+                };
 
                 results.Add(result);
                 return results;
@@ -184,10 +189,10 @@ namespace NetDiff
 
             foreach (var item in baseObj.Zip(antagonist))
             {
-                var currentBase = item.Key;
-                var currentAntagonist = item.Value;
+                var result = DiffObjects(
+                    baseObj: item.Key,
+                    evaluated: item.Value);
 
-                var result = DiffObjects(currentBase, currentAntagonist);
                 results.Add(result);
             }
 

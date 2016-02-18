@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using csharp_extensions.Extensions;
+using NetDiff.Model;
 
 namespace NetDiff
 {
@@ -15,7 +16,8 @@ namespace NetDiff
             object baseObj = null,
             object eval = null,
             IEnumerable<DiffedItem> items = null,
-            string message = "") : base(baseObj, eval, message)
+            DiffValue message = DiffValue.NotEqual) 
+            : base(baseObj, eval, message)
         {
             Items = items ?? new List<DiffedItem>();
         }

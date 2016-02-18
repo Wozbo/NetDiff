@@ -53,6 +53,7 @@
     <Compile Include="Model\DiffedObject.cs" />
     <Compile Include="FieldInfoIntersector.cs" />
     <Compile Include="Model\DiffedPrimitive.cs" />
+    <Compile Include="Model\DiffValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

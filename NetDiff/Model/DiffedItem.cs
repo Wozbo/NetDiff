@@ -4,19 +4,22 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using NetDiff.Model;
 
 namespace NetDiff
 {
     public class DiffedItem
     {
-        public string Message;
+        public DiffValue Message;
 
-        public DiffedItem(object baseObj=null, object eval=null, string message = "")
+        public DiffedItem(
+            object baseObj=null, 
+            object eval=null, 
+            DiffValue message = DiffValue.NotEqual)
         {
             BaseValue = baseObj;
             EvaluatedValue = eval;
             Message = message;
-
         }
 
         public object BaseValue, EvaluatedValue;

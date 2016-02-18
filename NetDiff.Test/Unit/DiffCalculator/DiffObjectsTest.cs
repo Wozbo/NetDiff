@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Extensions;
+using NetDiff.Model;
 
 namespace NetDiff.Test.Unit.DiffCalculator
 {
@@ -31,7 +32,7 @@ namespace NetDiff.Test.Unit.DiffCalculator
 
             var result = baseObject.DiffAgainst(antagonist);
 
-            Assert.AreEqual("Types are not both iterable", result.Message);
+            Assert.AreEqual(DiffValue.TypesDiffer, result.Message);
         }
     }
 }
