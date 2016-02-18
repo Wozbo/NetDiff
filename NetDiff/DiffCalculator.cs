@@ -206,33 +206,38 @@ namespace NetDiff
                 return results;
             }
 
-            // Sort the Base
-            var sortedBase = baseObj.ToList();
-            sortedBase.Sort();
+            // Determine the Error Message for mismatches in the list
+            var errorMessage = DiffMessage.DiffersInContent;
+            if(baseObj.All(n => n is IComparable) && antagonist.All(m => m is IComparable))
+            {
+                // Sort the Base
+                var sortedBase = baseObj.ToList();
+                sortedBase.Sort();
 
-            // Sort the Eval
-            var sortedAntagonist = antagonist.ToList();
-            sortedAntagonist.Sort();
-             
-            // Check values    
+                // Sort the Eval
+                var sortedAntagonist = antagonist.ToList();
+                sortedAntagonist.Sort();
+
+                // If the content is equal, then the order is the only thing that can differ
+                if (ContentIsEqual(sortedBase, sortedAntagonist))
+                {
+                    errorMessage = DiffMessage.DiffersInOrder;
+                }
+            }
+
+            // Check values 
             foreach (var item in baseObj.Zip(antagonist))
             {
                 var result = DiffObjects(
                     baseObj: item.Key,
                     evaluated: item.Value);
-                
+
+                // Change the error message if the values don't match
+                result.Message = result.ValuesMatch
+                    ? DiffMessage.NotApplicable
+                    : errorMessage;
+
                 results.Add(result);
-            }
-
-            // Validate that the content is similar
-            var errorMessage = ContentIsEqual(sortedBase, sortedAntagonist)
-                ? DiffMessage.DiffersInOrder
-                : DiffMessage.DiffersInContent;
-
-            // For anything that doesn't match, the order must differ.
-            foreach (var item in results.Where(n => !n.ValuesMatch))
-            {
-                item.Message = errorMessage;
             }
 
             return results;

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Model;
+using NetDiff.Test.TestObjects;
 
 namespace NetDiff.Test.Unit.DiffCalculator
 {
@@ -48,11 +49,15 @@ namespace NetDiff.Test.Unit.DiffCalculator
 
             Assert.AreEqual(
                 expected: 3,
-                actual: result.Count(n => n.Message.Equals(DiffMessage.DiffersInOrder)) );
+                actual: result.Count(n => n.Message.Equals(DiffMessage.DiffersInOrder)));
 
             Assert.AreEqual(
                 expected: 2,
-                actual: secondResult.Count(n => n.Message.Equals(DiffMessage.DiffersInOrder)) );
+                actual: secondResult.Count(n => n.Message.Equals(DiffMessage.DiffersInOrder)));
+
+            Assert.AreEqual(
+                expected: 1,
+                actual: secondResult.Count(n => n.Message.Equals(DiffMessage.NotApplicable)));
         }
 
 
@@ -79,6 +84,32 @@ namespace NetDiff.Test.Unit.DiffCalculator
             Assert.AreEqual(
                 expected: 3,
                 actual: secondResult.Count(n => n.Message.Equals(DiffMessage.DiffersInContent)));
+        }
+        
+        [TestMethod]
+        public void DiffListCannotSortListsOfObjects()
+        {
+            var a = new List<SubObject>
+            {
+                new SubObject("a"),
+                new SubObject("b"),
+                new SubObject("c")
+            };
+            var b = new List<SubObject>
+            {
+                new SubObject("c"),
+                new SubObject("b"),
+                new SubObject("a")
+            };
+
+            var calculator = new NetDiff.DiffCalculator();
+            var result = calculator.DiffList(
+                baseObj: a,
+                antagonist: b);
+
+            Assert.AreEqual(
+                expected: 2,
+                actual: result.Count(n => n.Message.Equals(DiffMessage.DiffersInContent)));
         }
 
     }
