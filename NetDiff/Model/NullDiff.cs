@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetDiff.Model
 {
-    public class DiffedNull : DiffedItem
+    public class NullDiff : BaseDiff
     {
         public override bool Equals(dynamic baseObj, dynamic evaluatedObj)
         {

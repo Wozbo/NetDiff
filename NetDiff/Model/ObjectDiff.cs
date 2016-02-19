@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using csharp_extensions.Extensions;
-using NetDiff.Model;
 
-namespace NetDiff
+namespace NetDiff.Model
 {
-    public class DiffedObject : DiffedItem
+    public class ObjectDiff : BaseDiff
     {
-        public IEnumerable<DiffedItem> Items;
+        public IEnumerable<BaseDiff> Items;
 
-        public DiffedObject(
+        public ObjectDiff(
             object baseObj = null,
             object eval = null,
-            IEnumerable<DiffedItem> items = null,
-            DiffMessage message = DiffMessage.NotApplicable) 
+            IEnumerable<BaseDiff> items = null,
+            DiffMessage message = DiffMessage.NotApplicable)
             : base(baseObj, eval, message)
         {
-            Items = items ?? new List<DiffedItem>();
+            Items = items ?? new List<BaseDiff>();
         }
 
         public override bool Equals(dynamic baseObj, dynamic evaluatedObj)
@@ -32,16 +28,16 @@ namespace NetDiff
         /// So only what is incorrect will remain.
         /// This will make hunting down problems much quicker.
         /// </summary>
-        public List<DiffedItem> WithoutMatching()
+        public List<BaseDiff> WithoutMatching()
         {
-            var result = new List<DiffedItem>();
+            var result = new List<BaseDiff>();
 
             var nonMatching = Items.Where(item => !item.ValuesMatch);
             foreach (var item in nonMatching)
             {
-                if (item.IsA(typeof (DiffedObject)))
+                if (item.IsA(typeof (ObjectDiff)))
                 {
-                    var obj = item as DiffedObject;
+                    var obj = item as ObjectDiff;
                     obj.Items = obj.WithoutMatching();
 
                     result.Add(obj);

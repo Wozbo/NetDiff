@@ -47,13 +47,13 @@
   <ItemGroup>
     <Compile Include="DiffCalculator.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Model\DiffedField.cs" />
-    <Compile Include="Model\DiffedIgnored.cs" />
-    <Compile Include="Model\DiffedItem.cs" />
-    <Compile Include="Model\DiffedNull.cs" />
-    <Compile Include="Model\DiffedObject.cs" />
+    <Compile Include="Model\FieldDiff.cs" />
+    <Compile Include="Model\IgnoredDiff.cs" />
+    <Compile Include="Model\BaseDiff.cs" />
+    <Compile Include="Model\NullDiff.cs" />
+    <Compile Include="Model\ObjectDiff.cs" />
     <Compile Include="FieldInfoIntersector.cs" />
-    <Compile Include="Model\DiffedPrimitive.cs" />
+    <Compile Include="Model\PrimitiveDiff.cs" />
     <Compile Include="Model\DiffMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
