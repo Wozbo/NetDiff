@@ -12,12 +12,16 @@ namespace NetDiff
     public class DiffCalculator
     {
         private readonly double _tolerance;
+        private readonly Type[] _ignoredClasses;
 
-        #region Get___ Helpers
-        public DiffCalculator(double tolerance=1e-6)
+        public DiffCalculator(double tolerance = 1e-6, Type[] ignoredClasses = null)
         {
             _tolerance = tolerance;
+            _ignoredClasses = ignoredClasses ?? new Type[] {};
         }
+
+        #region Get___ Helpers
+
 
 
         /// <summary>
@@ -100,6 +104,8 @@ namespace NetDiff
 
         #endregion
 
+        #region entry point
+
         #region Aliases
         public DiffedItem Diff(object baseObj, object evaluated)
         {
@@ -117,6 +123,12 @@ namespace NetDiff
             object baseObj,
             object evaluated)
         {
+            if (TypeIsIgnored(baseObj) || TypeIsIgnored(evaluated))
+            {
+                return new DiffedIgnored(baseObj: baseObj, eval: evaluated);
+            }
+
+
             // Validate that the objects are not null
             if (baseObj == null || evaluated == null)
             {
@@ -178,8 +190,27 @@ namespace NetDiff
             };
         }
 
+        #endregion
+
+        #region helpers
+
         /// <summary>
-        /// Diff two lists. Does not currently 
+        /// Currently there is no way to ignore null values
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public bool TypeIsIgnored(object obj)
+        {
+            if (obj == null) return false;
+
+            var type = obj.GetType();
+            var result = _ignoredClasses.Contains(type);
+            return result;
+        }
+
+
+        /// <summary>
+        /// Diff two lists. Does not currently
         /// </summary>
         /// <param name="baseObj"></param>
         /// <param name="antagonist"></param>
@@ -225,7 +256,7 @@ namespace NetDiff
                 }
             }
 
-            // Check values 
+            // Check values
             foreach (var item in baseObj.Zip(antagonist))
             {
                 var result = DiffObjects(
@@ -252,7 +283,7 @@ namespace NetDiff
         }
 
         /// <summary>
-        /// Diff a field 
+        /// Diff a field
         /// </summary>
         /// <param name="forField"></param>
         /// <param name="baseObj"></param>
@@ -265,7 +296,7 @@ namespace NetDiff
             var valueOfEvaluated = GetValue(otherFieldValue, antagonist);
 
             return DiffObjects(
-                baseObj: valueOfBase, 
+                baseObj: valueOfBase,
                 evaluated: valueOfEvaluated);
         }
 
@@ -337,5 +368,7 @@ namespace NetDiff
                 .Cast<DiffedItem>()
                 .ToList();
         }
+
+        #endregion
     }
 }

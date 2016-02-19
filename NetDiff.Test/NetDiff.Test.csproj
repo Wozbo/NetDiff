@@ -64,6 +64,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Integration\IgnoredClassesTest.cs" />
     <Compile Include="Integration\ListDiffTest.cs" />
     <Compile Include="Integration\ObjectDiffTest.cs" />
     <Compile Include="Integration\FieldDiffTest.cs" />

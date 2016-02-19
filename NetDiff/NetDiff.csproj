@@ -48,6 +48,7 @@
     <Compile Include="DiffCalculator.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Model\DiffedField.cs" />
+    <Compile Include="Model\DiffedIgnored.cs" />
     <Compile Include="Model\DiffedItem.cs" />
     <Compile Include="Model\DiffedNull.cs" />
     <Compile Include="Model\DiffedObject.cs" />
