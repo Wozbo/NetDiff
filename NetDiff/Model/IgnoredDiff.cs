@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace NetDiff.Model
 {
-    public class DiffedIgnored : DiffedItem
+    public class IgnoredDiff : BaseDiff
     {
-        public DiffedIgnored(object baseObj = null,
+        public IgnoredDiff(object baseObj = null,
             object eval = null)
         {
             BaseValue = baseObj;

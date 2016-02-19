@@ -1,13 +1,9 @@
 ﻿using csharp_extensions.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetDiff.Model
 {
-    public class DiffedPrimitive : DiffedItem
+    public class PrimitiveDiff : BaseDiff
     {
         public double Tolerance;
 

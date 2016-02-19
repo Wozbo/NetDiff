@@ -8,11 +8,11 @@ using NetDiff.Model;
 
 namespace NetDiff
 {
-    public class DiffedItem
+    public class BaseDiff
     {
         public DiffMessage Message;
 
-        public DiffedItem(
+        public BaseDiff(
             object baseObj = null,
             object eval = null,
             DiffMessage message = DiffMessage.NotApplicable)

@@ -107,7 +107,7 @@ namespace NetDiff
         #region entry point
 
         #region Aliases
-        public DiffedItem Diff(object baseObj, object evaluated)
+        public BaseDiff Diff(object baseObj, object evaluated)
         {
             return DiffObjects(baseObj, evaluated);
         }
@@ -119,20 +119,20 @@ namespace NetDiff
         /// <param name="baseObj"></param>
         /// <param name="evaluated"></param>
         /// <returns></returns>
-        public DiffedItem DiffObjects(
+        public BaseDiff DiffObjects(
             object baseObj,
             object evaluated)
         {
             if (TypeIsIgnored(baseObj) || TypeIsIgnored(evaluated))
             {
-                return new DiffedIgnored(baseObj: baseObj, eval: evaluated);
+                return new IgnoredDiff(baseObj: baseObj, eval: evaluated);
             }
 
 
             // Validate that the objects are not null
             if (baseObj == null || evaluated == null)
             {
-                return new DiffedNull
+                return new NullDiff
                 {
                     BaseValue = baseObj,
                     EvaluatedValue = evaluated
@@ -142,7 +142,7 @@ namespace NetDiff
             // Check to see if it's primitive
             if (baseObj.IsPrimitive())
             {
-                return new DiffedPrimitive
+                return new PrimitiveDiff
                 {
                     BaseValue = baseObj,
                     EvaluatedValue = evaluated,
@@ -160,7 +160,7 @@ namespace NetDiff
             {
                 if (!evaluated.IsIterable())
                 {
-                    return new DiffedItem
+                    return new BaseDiff
                     {
                         BaseValue = baseObj,
                         EvaluatedValue = evaluated,
@@ -182,7 +182,7 @@ namespace NetDiff
                 results.AddRange(fields);
             }
 
-            return new DiffedObject
+            return new ObjectDiff
             {
                 BaseValue = baseObj,
                 EvaluatedValue = evaluated,
@@ -215,9 +215,9 @@ namespace NetDiff
         /// <param name="baseObj"></param>
         /// <param name="antagonist"></param>
         /// <returns></returns>
-        public IEnumerable<DiffedItem> DiffList(IEnumerable<object> baseObj, IEnumerable<object> antagonist)
+        public IEnumerable<BaseDiff> DiffList(IEnumerable<object> baseObj, IEnumerable<object> antagonist)
         {
-            var results = new List<DiffedItem>();
+            var results = new List<BaseDiff>();
 
             // 1. Ensure the lists are the same size
             var baseSize = baseObj.Count();
@@ -226,7 +226,7 @@ namespace NetDiff
             // If these aren't the same size, don't run the Diff, just mention that it differs in length.
             if (baseSize != antagonistSize)
             {
-                var result = new DiffedItem
+                var result = new BaseDiff
                 {
                     BaseValue = baseObj,
                     EvaluatedValue = antagonist,
@@ -274,7 +274,7 @@ namespace NetDiff
             return results;
         }
 
-        private IEnumerable<DiffedItem> DiffFields(object baseObj, object antagonist)
+        private IEnumerable<BaseDiff> DiffFields(object baseObj, object antagonist)
         {
             var fields = baseObj.GetInstanceFields();
             var result = fields.Select(field => Diff(field, baseObj, antagonist));
@@ -289,7 +289,7 @@ namespace NetDiff
         /// <param name="baseObj"></param>
         /// <param name="antagonist"></param>
         /// <returns></returns>
-        private DiffedItem Diff(FieldInfo forField, object baseObj, object antagonist)
+        private BaseDiff Diff(FieldInfo forField, object baseObj, object antagonist)
         {
             var valueOfBase = GetValue(forField, baseObj);
             var otherFieldValue = GetFieldInfo(matching: forField, fromObject: antagonist);
@@ -307,7 +307,7 @@ namespace NetDiff
         /// <param name="baseObj">Baseline Object</param>
         /// <param name="evaluated">The object you might be evaluating</param>
         /// <returns>Collection of Items which are in both objects</returns>
-        public ICollection<DiffedItem> Intersect(
+        public ICollection<BaseDiff> Intersect(
             object baseObj,
             object evaluated)
         {
@@ -329,7 +329,7 @@ namespace NetDiff
         /// <param name="baseObj">Baseline Object</param>
         /// <param name="evaluated">The object you might be evaluating</param>
         /// <returns>Collection of Items which are mutually exclusive</returns>
-        public ICollection<DiffedItem> MutuallyExclusive(
+        public ICollection<BaseDiff> MutuallyExclusive(
             object baseObj,
             object evaluated)
         {
@@ -351,12 +351,12 @@ namespace NetDiff
         /// <param name="baseObj">The baseline object</param>
         /// <param name="antagonist">The object you're evaluating against</param>
         /// <returns>Collection of Items which are mutually exclusive</returns>
-        public ICollection<DiffedItem> Assemble(
+        public ICollection<BaseDiff> Assemble(
             IEnumerable<FieldInfo> fields,
             object baseObj,
             object antagonist)
         {
-            var exclusives = fields.Select(field => new DiffedField()
+            var exclusives = fields.Select(field => new FieldDiff()
             {
                 Field = field,
                 BaseValue = GetValue(field, baseObj),
@@ -365,7 +365,7 @@ namespace NetDiff
             });
 
             return exclusives
-                .Cast<DiffedItem>()
+                .Cast<BaseDiff>()
                 .ToList();
         }
 

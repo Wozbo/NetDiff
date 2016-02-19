@@ -11,7 +11,7 @@ namespace NetDiff.Extensions
 {
     public static class ObjectExtensions
     {
-        public static DiffedItem DiffAgainst(this object baseObject, object antagonist)
+        public static BaseDiff DiffAgainst(this object baseObject, object antagonist)
         {
             var calculator = new DiffCalculator();
             return calculator.Diff(baseObject, antagonist);

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using csharp_extensions.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NetDiff.Model;
 
 namespace NetDiff.Test.Unit.Model.DiffedObject
 {
@@ -14,15 +15,15 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
         [TestMethod]
         public void EmptyIfMatching()
         {
-            var obj = new NetDiff.DiffedObject()
+            var obj = new ObjectDiff()
                       {
                           BaseValue = 1,
                           EvaluatedValue = 1,
                           Items =
-                              new List<DiffedItem>()
+                              new List<BaseDiff>()
                               {
-                                  new DiffedItem() {BaseValue = 2, EvaluatedValue = 2},
-                                  new DiffedItem() {BaseValue = 3, EvaluatedValue = 3}
+                                  new BaseDiff() {BaseValue = 2, EvaluatedValue = 2},
+                                  new BaseDiff() {BaseValue = 3, EvaluatedValue = 3}
                               }
                       };
 
@@ -34,15 +35,15 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
         [TestMethod]
         public void OnlyMismatchedRemain()
         {
-            var obj = new NetDiff.DiffedObject()
+            var obj = new ObjectDiff()
                       {
                           BaseValue = 1,
                           EvaluatedValue = 1,
                           Items =
-                              new List<DiffedItem>()
+                              new List<BaseDiff>()
                               {
-                                  new DiffedItem() {BaseValue = 2, EvaluatedValue = 2},
-                                  new DiffedItem() {BaseValue = 3, EvaluatedValue = 1}
+                                  new BaseDiff() {BaseValue = 2, EvaluatedValue = 2},
+                                  new BaseDiff() {BaseValue = 3, EvaluatedValue = 1}
                               }
                       };
 
@@ -55,26 +56,26 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
         [TestMethod]
         public void OnlyNestedMismatchedRemain()
         {
-            var obj = new NetDiff.DiffedObject()
+            var obj = new ObjectDiff()
             {
                 BaseValue = 1,
                 EvaluatedValue = 1,
-                Items = new List<DiffedItem>()
+                Items = new List<BaseDiff>()
                     {
-                        new DiffedItem() {BaseValue = 2, EvaluatedValue = 2},
-                        new NetDiff.DiffedObject()
+                        new BaseDiff() {BaseValue = 2, EvaluatedValue = 2},
+                        new ObjectDiff()
                         {
                             BaseValue = 3,
                             EvaluatedValue = 3,
                             Items =
-                                new List<DiffedItem>()
+                                new List<BaseDiff>()
                                 {
-                                    new DiffedItem()
+                                    new BaseDiff()
                                     {
                                         BaseValue=2,
                                         EvaluatedValue=2
                                     },
-                                    new DiffedItem()
+                                    new BaseDiff()
                                     {
                                         BaseValue=3,
                                         EvaluatedValue=1
@@ -86,7 +87,7 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
 
             var result = obj.WithoutMatching();
 
-            var items = (List<DiffedItem>)result.First().Send("Items");
+            var items = (List<BaseDiff>)result.First().Send("Items");
 
             Assert.AreEqual(1, items.Count);
             Assert.AreEqual(false, items.First().ValuesMatch);

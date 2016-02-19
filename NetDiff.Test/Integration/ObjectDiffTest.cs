@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NetDiff.Model;
 using NetDiff.Test.TestObjects;
 
 namespace NetDiff.Test.Integration
@@ -64,7 +65,7 @@ namespace NetDiff.Test.Integration
                     };
 
 
-            var result = _calculator.Diff(a, b) as DiffedObject;
+            var result = _calculator.Diff(a, b) as ObjectDiff;
 
             result.WithoutMatching();
 
