@@ -14,12 +14,29 @@ namespace NetDiff
         private readonly double _tolerance;
         private readonly Type[] _ignoredClasses;
         private readonly bool _ignoreMatches;
+        private readonly string[] _ignoreFieldsNamed = null;
+        private readonly string[] _ignoreFieldsContaining = null;
+        private readonly Dictionary<Type, string[]> _ignoreFieldsNamedByType = null;
+        private readonly Dictionary<Type, string[]> _ignoreFieldsContainingByType = null;
 
-        public DiffCalculator(double tolerance = 1e-6, Type[] ignoredClasses = null, bool ignoreMatches = false)
+
+        public DiffCalculator(
+            double tolerance = 1e-6,
+            Type[] ignoredClasses = null,
+            bool ignoreMatches = false,
+            string[] ignoreFieldsNamed = null,
+            string[] ignoreFieldsContaining = null,
+            Dictionary<Type, string[]> ignoreFieldsNamedByType = null,
+            Dictionary<Type, string[]> ignoreFieldsContainingByType = null
+            )
         {
             _tolerance = tolerance;
             _ignoredClasses = ignoredClasses ?? new Type[] {};
             _ignoreMatches = ignoreMatches;
+            _ignoreFieldsNamed = ignoreFieldsNamed ?? new string[] {};
+            _ignoreFieldsContaining = ignoreFieldsContaining ?? new string[] {};
+            _ignoreFieldsNamedByType = ignoreFieldsNamedByType ?? new Dictionary<Type, string[]>();
+            _ignoreFieldsContainingByType = ignoreFieldsContainingByType ?? new Dictionary<Type, string[]>();
         }
 
         #region Entry point
@@ -100,7 +117,9 @@ namespace NetDiff
             var fields = exclusiveTo.GetInstanceFields();
 
             // Find the fields where the antagonist doesn't have a correlate; return it
-            return fields
+            var nonIgnoredFields = fields.Where(f => !FieldIsIgnored(f));
+
+            return nonIgnoredFields
                 .Where(n => !antagonist.HasFieldMatching(n))
                 .ToList();
         }
@@ -205,6 +224,29 @@ namespace NetDiff
         }
 
         /// <summary>
+        /// if the field is ignored, return true.
+        /// otherwise false.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public bool FieldIsIgnored(FieldInfo info)
+        {
+            var name = info.Name;
+            var declaringType = info.DeclaringType;
+
+            var globallyIgnoredField = _ignoreFieldsNamed.Contains(name);
+            var typeIgnoresField = _ignoreFieldsNamedByType.GetValue(declaringType)?.Contains(name);
+            var globallyIgnoredContainingText = _ignoreFieldsContaining.Any(s => name.Contains(s));
+            var typeIgnoresContainingText = _ignoreFieldsContainingByType.GetValue(declaringType)?.Any(s => name.Contains(s));
+
+            var result = globallyIgnoredField || globallyIgnoredContainingText;
+            result = result || (typeIgnoresField.HasValue && (bool)typeIgnoresField);
+            result = result || (typeIgnoresContainingText.HasValue && (bool)typeIgnoresContainingText);
+
+            return result;
+        }
+
+        /// <summary>
         /// Currently there is no way to ignore null values
         /// </summary>
         /// <param name="obj"></param>
@@ -287,7 +329,8 @@ namespace NetDiff
         private IEnumerable<BaseDiff> DiffFields(object baseObj, object antagonist)
         {
             var fields = baseObj.GetInstanceFields();
-            var result = fields.Select(field => Diff(field, baseObj, antagonist));
+            var nonIgnoredFields = fields.Where(f => !FieldIsIgnored(f));
+            var result = nonIgnoredFields.Select(field => Diff(field, baseObj, antagonist));
 
             return result;
         }
@@ -301,6 +344,14 @@ namespace NetDiff
         /// <returns></returns>
         private BaseDiff Diff(FieldInfo forField, object baseObj, object antagonist)
         {
+            var ignored = FieldIsIgnored(forField);
+
+            if (ignored)
+            {
+                return new IgnoredDiff(baseObj: baseObj, eval: antagonist);
+            }
+
+
             var valueOfBase = GetValue(forField, baseObj);
             var otherFieldValue = GetFieldInfo(matching: forField, fromObject: antagonist);
             var valueOfEvaluated = GetValue(otherFieldValue, antagonist);
@@ -366,7 +417,9 @@ namespace NetDiff
             object baseObj,
             object antagonist)
         {
-            var exclusives = fields.Select(field => new FieldDiff()
+            var nonIgnoredFields = fields.Where(f => !FieldIsIgnored(f));
+
+            var exclusives = nonIgnoredFields.Select(field => new FieldDiff()
             {
                 Field = field,
                 BaseValue = GetValue(field, baseObj),
