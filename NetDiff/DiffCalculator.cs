@@ -13,11 +13,13 @@ namespace NetDiff
     {
         private readonly double _tolerance;
         private readonly Type[] _ignoredClasses;
+        private readonly bool _ignoreMatches;
 
-        public DiffCalculator(double tolerance = 1e-6, Type[] ignoredClasses = null)
+        public DiffCalculator(double tolerance = 1e-6, Type[] ignoredClasses = null, bool ignoreMatches = false)
         {
             _tolerance = tolerance;
             _ignoredClasses = ignoredClasses ?? new Type[] {};
+            _ignoreMatches = ignoreMatches;
         }
 
         #region Get___ Helpers
@@ -109,7 +111,18 @@ namespace NetDiff
         #region Aliases
         public BaseDiff Diff(object baseObj, object evaluated)
         {
-            return DiffObjects(baseObj, evaluated);
+            var diffedData = DiffObjects(baseObj, evaluated);
+
+            if (diffedData.IsA(typeof (ObjectDiff)))
+            {
+                var objectDiff = diffedData as ObjectDiff;
+                objectDiff.Items = objectDiff.WithoutMatching();
+
+                return objectDiff;
+            }
+
+
+            return diffedData;
         }
         #endregion
 
