@@ -12,6 +12,8 @@ namespace NetDiff.Model
         DiffersInLength = 1,
         DiffersInOrder = 2,
         DiffersInType = 3,
-        DiffersInContent = 4
+        DiffersInContent = 4,
+        Ignored = 5
+
     }
 }
