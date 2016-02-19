@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Extensions;
 using NetDiff.Model;
+using NetDiff.Test.TestObjects;
 
 namespace NetDiff.Test.Unit.DiffCalculator
 {

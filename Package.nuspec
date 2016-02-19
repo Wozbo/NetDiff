@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NetDiff</id>
+    <version>0.4.1</version>
+    <authors>Evan Kirsch and Preston Sego</authors>
+    <owners>Evan Kirsch</owners>
+    <licenseUrl>https://github.com/etkirsch/NetDiff/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/etkirsch/NetDiff</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Used to find differences between two .NET objects.</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>todo</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>

@@ -56,44 +56,33 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
         public void OnlyNestedMismatchedRemain()
         {
             var obj = new NetDiff.DiffedObject()
-                      {
-                          BaseValue = 1,
-                          EvaluatedValue = 1,
-                          Items =
-                              new List<DiffedItem>()
-                              {
-                                  new DiffedItem() {BaseValue = 2, EvaluatedValue = 2},
-                                  new NetDiff.DiffedObject()
-                                  {
-                                      BaseValue = 3,
-                                      EvaluatedValue = 3,
-                                      Items =
-                                          new List<DiffedItem>()
-                                          {
-                                              new DiffedItem
-                                                  ()
-                                              {
-                                                  BaseValue
-                                                      =
-                                                      2,
-                                                  EvaluatedValue
-                                                      =
-                                                      2
-                                              },
-                                              new DiffedItem
-                                                  ()
-                                              {
-                                                  BaseValue
-                                                      =
-                                                      3,
-                                                  EvaluatedValue
-                                                      =
-                                                      1
-                                              }
-                                          }
-                                  }
-                              }
-                      };
+            {
+                BaseValue = 1,
+                EvaluatedValue = 1,
+                Items = new List<DiffedItem>()
+                    {
+                        new DiffedItem() {BaseValue = 2, EvaluatedValue = 2},
+                        new NetDiff.DiffedObject()
+                        {
+                            BaseValue = 3,
+                            EvaluatedValue = 3,
+                            Items =
+                                new List<DiffedItem>()
+                                {
+                                    new DiffedItem()
+                                    {
+                                        BaseValue=2,
+                                        EvaluatedValue=2
+                                    },
+                                    new DiffedItem()
+                                    {
+                                        BaseValue=3,
+                                        EvaluatedValue=1
+                                    }
+                                }
+                        }
+                    }
+            };
 
             var result = obj.WithoutMatching();
 
