@@ -41,5 +41,21 @@ namespace NetDiff.Test.Integration
             Assert.IsFalse(items.Any());
         }
 
+        [TestMethod]
+        public void MatchesAreNotIgnored()
+        {
+            var calculator = new DiffCalculator(ignoreMatches: false);
+            var a = new List<double> { 1.1, 2.1, 3.1 };
+            var b = new List<double> { 1.1, 2.1, 3.1 };
+
+            var result = calculator.Diff(a, b);
+
+            var items = ((ObjectDiff)result).Items;
+
+            Assert.IsTrue(result.ValuesMatch);
+            // Currently <= because there are some hidden fields included
+            Assert.IsTrue(3 <= items.Count());
+        }
+
     }
 }

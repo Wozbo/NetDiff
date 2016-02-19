@@ -113,7 +113,7 @@ namespace NetDiff
         {
             var diffedData = DiffObjects(baseObj, evaluated);
 
-            if (diffedData.IsA(typeof (ObjectDiff)))
+            if (_ignoreMatches && diffedData.IsA(typeof (ObjectDiff)))
             {
                 var objectDiff = diffedData as ObjectDiff;
                 objectDiff.Items = objectDiff.WithoutMatching();
