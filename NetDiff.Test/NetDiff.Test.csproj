@@ -65,6 +65,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Integration\IgnoredClassesTest.cs" />
+    <Compile Include="Integration\IgnoredFieldsTest.cs" />
     <Compile Include="Integration\IgnoreMatchesTest.cs" />
     <Compile Include="Integration\ListDiffTest.cs" />
     <Compile Include="Integration\ObjectDiffTest.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="TestObjects\GenericDynamicObject.cs" />
     <Compile Include="Unit\DiffCalculator\DiffListTest.cs" />
     <Compile Include="Unit\DiffCalculator\DiffObjectsTest.cs" />
+    <Compile Include="Unit\Extensions\DictionaryGetValue.cs" />
     <Compile Include="Unit\Extensions\GetNonObjectInstanceFieldsTest.cs" />
     <Compile Include="Unit\Extensions\GetObjectInstanceFieldsTest.cs" />
     <Compile Include="Unit\Extensions\IsObjectFieldTest.cs" />
