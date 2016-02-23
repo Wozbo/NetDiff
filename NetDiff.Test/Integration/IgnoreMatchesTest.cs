@@ -1,17 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NetDiff.Model;
+using Xunit;
 
 namespace NetDiff.Test.Integration
 {
-    [TestClass]
     public class IgnoredMatchesTest
     {
-        [TestMethod]
+        [Fact]
         public void AllMatchesAreIgnored()
         {
             var calculator = new DiffCalculator(ignoreMatches: true);
@@ -22,11 +21,11 @@ namespace NetDiff.Test.Integration
             var resultMatch = result.ValuesMatch;
             var items = ((ObjectDiff)result).Items;
 
-            Assert.IsFalse(resultMatch);
-            Assert.AreEqual(2, items.Count());
+            Assert.False(resultMatch);
+            Assert.Equal(2, items.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void ItemsFieldIsEmptySet()
         {
             var calculator = new DiffCalculator(ignoreMatches: true);
@@ -37,11 +36,11 @@ namespace NetDiff.Test.Integration
 
             var items = ((ObjectDiff)result).Items;
 
-            Assert.IsTrue(result.ValuesMatch);
-            Assert.IsFalse(items.Any());
+            Assert.True(result.ValuesMatch);
+            Assert.False(items.Any());
         }
 
-        [TestMethod]
+        [Fact]
         public void MatchesAreNotIgnored()
         {
             var calculator = new DiffCalculator(ignoreMatches: false);
@@ -52,9 +51,9 @@ namespace NetDiff.Test.Integration
 
             var items = ((ObjectDiff)result).Items;
 
-            Assert.IsTrue(result.ValuesMatch);
+            Assert.True(result.ValuesMatch);
             // Currently <= because there are some hidden fields included
-            Assert.IsTrue(3 <= items.Count());
+            Assert.True(3 <= items.Count());
         }
 
     }

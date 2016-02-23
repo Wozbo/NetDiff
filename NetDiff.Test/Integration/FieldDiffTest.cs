@@ -1,32 +1,30 @@
 ﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Test.TestObjects;
+using Xunit;
 
 namespace NetDiff.Test.Integration
 {
-    [TestClass]
     public class FieldDiffTest
     {
         private DiffCalculator _calculator;
 
-        [TestInitialize]
-        public void Initialize()
+        public FieldDiffTest()
         {
             _calculator = new DiffCalculator();
         }
 
 
-        [TestMethod]
+        [Fact]
         public void Intersect_ProducesAList()
         {
             var result = _calculator.Intersect(
                 baseObj: new GenericDynamicObject(),
                 evaluated: new GenericDynamicObject());
 
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_ListHasFieldsSet()
         {
             var basePublicString = "This is the base object";
@@ -44,12 +42,12 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.IsTrue(result.Any(
+            Assert.True(result.Any(
                   n => string.Equals(n.BaseValue, basePublicString)
                     && string.Equals(n.EvaluatedValue, evaluatedPublicString)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_ListDisplaysAppropriateNumberOfEqualFields()
         {
             var identicalStrings = "These strings are identical";
@@ -71,16 +69,16 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 3,
                 actual: result.Count(n => n.ValuesMatch));
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => !n.ValuesMatch));
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_YieldsOnlyCommonFields()
         {
             var identicalStrings = "These strings are identical";
@@ -100,12 +98,12 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 2,
                 actual: result.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_EqualityReflectedAcrossDifferentObjects()
         {
             var identicalStrings = "These strings are identical";
@@ -127,16 +125,16 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => n.ValuesMatch));
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => !n.ValuesMatch));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetExclusiveFields_YieldsOnlyExclusiveFields()
         {
             var baseObj = new GenericDynamicObject();
@@ -144,13 +142,13 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.GetExclusiveFields(baseObj, evaluatedObject);
 
-            Assert.IsTrue(result.ToList()
+            Assert.True(result.ToList()
                 .Any(n => string.Equals(n.Name, "SecondaryString")));
         }
 
 
 
-        [TestMethod]
+        [Fact]
         public void MutuallyExclusive_EqualityReflectedAcrossDifferentObjects()
         {
             var identicalStrings = "These strings are identical";
@@ -172,11 +170,11 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => n.BaseValue!= null));
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => n.EvaluatedValue != null));
         }

@@ -1,23 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Model;
 using NetDiff.Test.TestObjects;
+using Xunit;
 
 namespace NetDiff.Test.Integration
 {
-    [TestClass]
     public class ObjectDiffTest
     {
         private DiffCalculator _calculator;
 
-        [TestInitialize]
-        public void Initialize()
+        public ObjectDiffTest()
         {
             _calculator = new DiffCalculator();
         }
 
-        [TestMethod]
+        [Fact]
         public void ObjectWithListMatches()
         {
 
@@ -42,10 +40,10 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.Diff(a, b);
 
-            Assert.IsTrue(result.ValuesMatch);
+            Assert.True(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void ObjectWithListDoesNotMatch()
         {
             var a = new ObjectWithList
@@ -69,10 +67,10 @@ namespace NetDiff.Test.Integration
 
             result.WithoutMatching();
 
-            Assert.IsFalse(result.ValuesMatch);
+            Assert.False(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void ObjectWithPropertyMatches()
         {
             var a = new ObjectWithProperties
@@ -91,10 +89,10 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.Diff(a, b);
 
-            Assert.IsTrue(result.ValuesMatch);
+            Assert.True(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void ObjectWithNestedObjectMatches()
         {
             var a = new NestingObject
@@ -123,10 +121,10 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.Diff(a, b);
 
-            Assert.IsTrue(result.ValuesMatch);
+            Assert.True(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void ObjectWithNestedObjectDoesNotMatch()
         {
             var a = new NestingObject
@@ -154,10 +152,10 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.Diff(a, b);
 
-            Assert.IsFalse(result.ValuesMatch);
+            Assert.False(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiffObjects_ShowsObjectsAreTrueIfTheyMatch()
         {
             var identicalString = "These strings are identical";
@@ -179,10 +177,10 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.IsTrue(result.ValuesMatch);
+            Assert.True(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiffObjects_EqualityReflectedAcrossDifferentObjects()
         {
             var identicalStrings = "These strings are identical";
@@ -204,10 +202,10 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.IsTrue(result.ValuesMatch);
+            Assert.True(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void DiffObjects_RecursesAppropriately()
         {
             var identicalStrings = "These strings are identical";
@@ -241,8 +239,8 @@ namespace NetDiff.Test.Integration
                 baseObj: baseObj,
                 evaluated: notEqualObj);
 
-            Assert.IsTrue(equalResult.ValuesMatch);
-            Assert.IsFalse(notEqualResult.ValuesMatch);
+            Assert.True(equalResult.ValuesMatch);
+            Assert.False(notEqualResult.ValuesMatch);
         }
     }
 }

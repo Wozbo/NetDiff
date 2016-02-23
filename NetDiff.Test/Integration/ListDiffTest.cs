@@ -1,20 +1,18 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace NetDiff.Test.Integration
 {
-    [TestClass]
     public class ListDiffTest
     {
         private DiffCalculator _calculator;
 
-        [TestInitialize]
-        public void Initialize()
+        public ListDiffTest()
         {
             _calculator = new DiffCalculator();
         }
 
-        [TestMethod]
+        [Fact]
         public void ListIsTheSame()
         {
             var a = new List<string> {"hi", "there"};
@@ -22,10 +20,10 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.Diff(a, b);
 
-            Assert.IsTrue(result.ValuesMatch);
+            Assert.True(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void ListIsDifferent()
         {
             var a = new List<string> { "hi", "there" };
@@ -33,11 +31,11 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.Diff(a, b);
 
-            Assert.IsFalse(result.ValuesMatch);
+            Assert.False(result.ValuesMatch);
 
         }
 
-        [TestMethod]
+        [Fact]
         public void ListHasAllTheSameElementsButInADifferentOrder()
         {
             var a = new List<string> { "hi", "there" };
@@ -45,7 +43,7 @@ namespace NetDiff.Test.Integration
 
             var result = _calculator.Diff(a, b);
 
-            Assert.IsFalse(result.ValuesMatch);
+            Assert.False(result.ValuesMatch);
 
         }
     }

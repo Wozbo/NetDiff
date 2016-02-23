@@ -1,16 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace NetDiff.Test.Integration
 {
-    [TestClass]
     public class IgnoredClassesTest
     {
-        [TestMethod]
+        [Fact]
         public void AClassIsIgnored()
         {
             var calculator = new DiffCalculator(ignoredClasses: new[] {typeof (double)});
@@ -19,10 +18,10 @@ namespace NetDiff.Test.Integration
 
             var result = calculator.Diff(a, b);
             var resultMatch = result.ValuesMatch;
-            Assert.IsTrue(resultMatch);
+            Assert.True(resultMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void AClassIsNotIgnoredWhenItIsntDiffed()
         {
             var calculator = new DiffCalculator(ignoredClasses: new[] { typeof(decimal) });
@@ -31,10 +30,10 @@ namespace NetDiff.Test.Integration
 
             var result = calculator.Diff(a, b);
 
-            Assert.IsFalse(result.ValuesMatch);
+            Assert.False(result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void NothingIsIgnoredWhenNothingIsSpecified()
         {
             var calculator = new DiffCalculator();
@@ -43,7 +42,7 @@ namespace NetDiff.Test.Integration
 
             var result = calculator.Diff(a, b);
 
-            Assert.IsFalse(result.ValuesMatch);
+            Assert.False(result.ValuesMatch);
         }
     }
 }
