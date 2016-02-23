@@ -22,6 +22,24 @@ namespace NetDiff
             _ignoreMatches = ignoreMatches;
         }
 
+        #region Entry point
+        public BaseDiff Diff(object baseObj, object evaluated)
+        {
+            var diffedData = DiffObjects(baseObj, evaluated);
+
+            if (_ignoreMatches && diffedData.IsA(typeof(ObjectDiff)))
+            {
+                var objectDiff = diffedData as ObjectDiff;
+                objectDiff.Items = objectDiff.WithoutMatching();
+
+                return objectDiff;
+            }
+
+
+            return diffedData;
+        }
+        #endregion
+
         #region Get___ Helpers
 
 
@@ -33,7 +51,7 @@ namespace NetDiff
         /// <param name="matching">FieldInfo you're matching against</param>
         /// <param name="fromObject">The object from which the correlate will come</param>
         /// <returns>A Correlated FieldInfo (if it exists)</returns>
-        public FieldInfo GetFieldInfo(FieldInfo matching, object fromObject)
+        internal FieldInfo GetFieldInfo(FieldInfo matching, object fromObject)
         {
             return fromObject
                 .GetType()
@@ -49,7 +67,7 @@ namespace NetDiff
         /// <param name="forField">FieldInfo you're matching against</param>
         /// <param name="obj">The object you're checking</param>
         /// <returns>Value of the field for evaluated object</returns>
-        public dynamic GetValue(FieldInfo forField, object obj)
+        internal dynamic GetValue(FieldInfo forField, object obj)
         {
             // Check if the field exists
             if (obj.GetInstanceFields().Contains(forField))
@@ -75,7 +93,7 @@ namespace NetDiff
         /// <param name="exclusiveTo">The object whose fields you're looking through</param>
         /// <param name="antagonist">The object whose fields we are de-intersecting</param>
         /// <returns>A list of exclusive fieldinfos</returns>
-        public List<FieldInfo> GetExclusiveFields(
+        internal List<FieldInfo> GetExclusiveFields(
             object exclusiveTo,
             object antagonist)
         {
@@ -87,7 +105,7 @@ namespace NetDiff
                 .ToList();
         }
 
-        public List<FieldInfo> GetMutualObjectFields(
+        internal List<FieldInfo> GetMutualObjectFields(
             object baseObj,
             object evaluated)
         {
@@ -106,25 +124,8 @@ namespace NetDiff
 
         #endregion
 
-        #region entry point
 
-        #region Aliases
-        public BaseDiff Diff(object baseObj, object evaluated)
-        {
-            var diffedData = DiffObjects(baseObj, evaluated);
-
-            if (_ignoreMatches && diffedData.IsA(typeof (ObjectDiff)))
-            {
-                var objectDiff = diffedData as ObjectDiff;
-                objectDiff.Items = objectDiff.WithoutMatching();
-
-                return objectDiff;
-            }
-
-
-            return diffedData;
-        }
-        #endregion
+        #region helpers
 
         /// <summary>
         /// Diff two objects
@@ -132,7 +133,7 @@ namespace NetDiff
         /// <param name="baseObj"></param>
         /// <param name="evaluated"></param>
         /// <returns></returns>
-        public BaseDiff DiffObjects(
+        internal BaseDiff DiffObjects(
             object baseObj,
             object evaluated)
         {
@@ -203,16 +204,12 @@ namespace NetDiff
             };
         }
 
-        #endregion
-
-        #region helpers
-
         /// <summary>
         /// Currently there is no way to ignore null values
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public bool TypeIsIgnored(object obj)
+        internal bool TypeIsIgnored(object obj)
         {
             if (obj == null) return false;
 
@@ -228,7 +225,7 @@ namespace NetDiff
         /// <param name="baseObj"></param>
         /// <param name="antagonist"></param>
         /// <returns></returns>
-        public IEnumerable<BaseDiff> DiffList(IEnumerable<object> baseObj, IEnumerable<object> antagonist)
+        internal IEnumerable<BaseDiff> DiffList(IEnumerable<object> baseObj, IEnumerable<object> antagonist)
         {
             var results = new List<BaseDiff>();
 
@@ -320,7 +317,7 @@ namespace NetDiff
         /// <param name="baseObj">Baseline Object</param>
         /// <param name="evaluated">The object you might be evaluating</param>
         /// <returns>Collection of Items which are in both objects</returns>
-        public ICollection<BaseDiff> Intersect(
+        internal ICollection<BaseDiff> Intersect(
             object baseObj,
             object evaluated)
         {
@@ -342,7 +339,7 @@ namespace NetDiff
         /// <param name="baseObj">Baseline Object</param>
         /// <param name="evaluated">The object you might be evaluating</param>
         /// <returns>Collection of Items which are mutually exclusive</returns>
-        public ICollection<BaseDiff> MutuallyExclusive(
+        internal ICollection<BaseDiff> MutuallyExclusive(
             object baseObj,
             object evaluated)
         {
@@ -364,7 +361,7 @@ namespace NetDiff
         /// <param name="baseObj">The baseline object</param>
         /// <param name="antagonist">The object you're evaluating against</param>
         /// <returns>Collection of Items which are mutually exclusive</returns>
-        public ICollection<BaseDiff> Assemble(
+        internal ICollection<BaseDiff> Assemble(
             IEnumerable<FieldInfo> fields,
             object baseObj,
             object antagonist)
