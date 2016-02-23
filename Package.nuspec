@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NetDiff</id>
-    <version>0.6.2</version>
+    <version>0.7.0</version>
     <authors>Evan Kirsch and Preston Sego</authors>
     <owners>Evan Kirsch</owners>
     <licenseUrl>https://github.com/etkirsch/NetDiff/blob/master/LICENSE</licenseUrl>
