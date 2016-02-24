@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using csharp_extensions.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Model;
+using Xunit;
 
 namespace NetDiff.Test.Unit.Model.DiffedObject
 {
-    [TestClass]
     public class WithoutMatchingTest
     {
-        [TestMethod]
+        [Fact]
         public void EmptyIfMatching()
         {
             var obj = new ObjectDiff()
@@ -29,10 +28,10 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
 
             var result = obj.WithoutMatching();
 
-            Assert.AreEqual(0, result.Count);
+            Assert.Equal(0, result.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlyMismatchedRemain()
         {
             var obj = new ObjectDiff()
@@ -49,11 +48,11 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
 
             var result = obj.WithoutMatching();
 
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(false, result.First().ValuesMatch);
+            Assert.Equal(1, result.Count);
+            Assert.Equal(false, result.First().ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlyNestedMismatchedRemain()
         {
             var obj = new ObjectDiff()
@@ -89,8 +88,8 @@ namespace NetDiff.Test.Unit.Model.DiffedObject
 
             var items = (List<BaseDiff>)result.First().Send("Items");
 
-            Assert.AreEqual(1, items.Count);
-            Assert.AreEqual(false, items.First().ValuesMatch);
+            Assert.Equal(1, items.Count);
+            Assert.Equal(false, items.First().ValuesMatch);
         }
     }
 }

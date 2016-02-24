@@ -1,0 +1,11 @@
+language: csharp
+solution: NetDiff.sln
+install:
+  - nuget restore NetDiff.sln
+  - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Debug NetDiff.sln /p:TargetFrameworkVersion="v4.5"
+  - ls ./packages
+  - ls NetDiff.Test/bin
+  - ls NetDiff.Test/bin/Debug
+  - mono ./packages/xunit.runner.console.*/tools/xunit.console.exe ./NetDiff.Test/bin/Debug/NetDiff.Test.dll

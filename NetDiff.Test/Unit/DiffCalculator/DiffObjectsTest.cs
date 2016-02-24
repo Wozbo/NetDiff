@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Extensions;
 using NetDiff.Model;
 using NetDiff.Test.TestObjects;
+using Xunit;
 
 namespace NetDiff.Test.Unit.DiffCalculator
-{
-    [TestClass]
-    public class DiffObjectsTest
+{    public class DiffObjectsTest
     {
 
-        [TestMethod]
+        [Fact]
         public void ObjectsMayBeOfDifferentType()
         {
             var baseObject = 2;
@@ -22,10 +20,10 @@ namespace NetDiff.Test.Unit.DiffCalculator
 
             var result = baseObject.DiffAgainst(antagonist);
 
-            Assert.AreEqual(false, result.ValuesMatch);
+            Assert.Equal(false, result.ValuesMatch);
         }
 
-        [TestMethod]
+        [Fact]
         public void AntagonistIsNotIterable()
         {
             var baseObject = new List<int> {1, 2, 3};
@@ -33,7 +31,7 @@ namespace NetDiff.Test.Unit.DiffCalculator
 
             var result = baseObject.DiffAgainst(antagonist);
 
-            Assert.AreEqual(DiffMessage.DiffersInType, result.Message);
+            Assert.Equal(DiffMessage.DiffersInType, result.Message);
         }
     }
 }

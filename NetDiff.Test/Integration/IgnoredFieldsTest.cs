@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetDiff.Model;
 using NetDiff.Test.TestObjects;
+using Xunit;
 
 namespace NetDiff.Test.Integration
 {
-    [TestClass]
     public class IgnoredFieldsTest
     {
 
-        [TestMethod]
+        [Fact]
         public void IgnoresFieldsNamed()
         {
             var calculator = new DiffCalculator(
@@ -24,11 +23,11 @@ namespace NetDiff.Test.Integration
 
             var resultObject = calculator.Diff(a, b);
 
-            Assert.IsTrue(resultObject.ValuesMatch);
+            Assert.True(resultObject.ValuesMatch);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void IgnoresFieldsContaining()
         {
             var calculator = new DiffCalculator(
@@ -39,12 +38,12 @@ namespace NetDiff.Test.Integration
 
             var resultObject = calculator.Diff(a, b);
 
-            Assert.IsTrue(resultObject.ValuesMatch);
+            Assert.True(resultObject.ValuesMatch);
         }
 
 
 
-        [TestMethod]
+        [Fact]
         public void IgnoresFieldsNamedByType()
         {
             var calculator = new DiffCalculator(ignoreFieldsNamedByType: new Dictionary<Type, string[]> {{typeof (SlightlyDifferentObject), new[] {"SecondString"}}});
@@ -54,11 +53,11 @@ namespace NetDiff.Test.Integration
 
             var resultObject = calculator.Diff(a, b);
 
-            Assert.IsTrue(resultObject.ValuesMatch);
+            Assert.True(resultObject.ValuesMatch);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void IgnoresFieldsContainingByType()
         {
             var calculator = new DiffCalculator(ignoreFieldsContainingByType: new Dictionary<Type, string[]> { { typeof(SlightlyDifferentObject), new[] { "String" } } });
@@ -68,7 +67,7 @@ namespace NetDiff.Test.Integration
 
             var resultObject = calculator.Diff(a, b);
 
-            Assert.IsTrue(resultObject.ValuesMatch);
+            Assert.True(resultObject.ValuesMatch);
         }
 
 

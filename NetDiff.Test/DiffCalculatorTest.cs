@@ -17,7 +17,7 @@ namespace NetDiff.Test
             _calculator = new DiffCalculator();
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorrelate_DoesNotPullEqualNameDifferentType()
         {
             var baseObj = new GenericDynamicObject();
@@ -28,10 +28,10 @@ namespace NetDiff.Test
                 field: fields.First(n => n.Name.Equals("SecondaryString")),
                 obj: evaluated);
 
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsObjectField_DiscernsObject()
         {
             var baseObj = new GenericDynamicObject(subobj: new SubObject("derr"));
@@ -41,10 +41,10 @@ namespace NetDiff.Test
                 field: fields.First(n => n.Name.Equals("SubObj")),
                 obj: baseObj);
 
-            Assert.IsTrue(result);
+            Assert.True(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_ProducesAList()
         {
             var result = _calculator.Intersect(
@@ -54,7 +54,7 @@ namespace NetDiff.Test
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_ListHasFieldsSet()
         {
             var basePublicString = "This is the base object";
@@ -72,12 +72,12 @@ namespace NetDiff.Test
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.IsTrue(result.Any(
+            Assert.True(result.Any(
                   n => string.Equals(n.BaseValue, basePublicString)
                     && string.Equals(n.EvaluatedValue, evaluatedPublicString)));
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_ListDisplaysAppropriateNumberOfEqualFields()
         {
             var identicalStrings = "These strings are identical";
@@ -99,16 +99,16 @@ namespace NetDiff.Test
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 3,
                 actual: result.Count(n => n.ValuesMatch));
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => !n.ValuesMatch));
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_YieldsOnlyCommonFields()
         {
             var identicalStrings = "These strings are identical";
@@ -128,12 +128,12 @@ namespace NetDiff.Test
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 2,
                 actual: result.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void Intersect_EqualityReflectedAcrossDifferentObjects()
         {
             var identicalStrings = "These strings are identical";
@@ -155,16 +155,16 @@ namespace NetDiff.Test
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => n.ValuesMatch));
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => !n.ValuesMatch));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetExclusiveFields_YieldsOnlyExclusiveFields()
         {
             var baseObj = new GenericDynamicObject();
@@ -172,33 +172,33 @@ namespace NetDiff.Test
 
             var result = _calculator.GetExclusiveFields(baseObj, evaluatedObject);
 
-            Assert.IsTrue(result.ToList()
+            Assert.True(result.ToList()
                 .Any(n => string.Equals(n.Name, "SecondaryString")));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetObjectFields_YieldsOnlyObjects()
         {
             var baseObj = new GenericDynamicObject(subobj: new SubObject("An Object"));
             var result = _calculator.GetOjbectFields(baseObj);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNonObjectFields_YieldsOnlyNonObjects()
         {
             var baseObj = new GenericDynamicObject(subobj: new SubObject("An Object"));
             var result = _calculator.GetNonOjbectFields(baseObj);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 3,
                 actual: result.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void MutuallyExclusive_EqualityReflectedAcrossDifferentObjects()
         {
             var identicalStrings = "These strings are identical";
@@ -220,11 +220,11 @@ namespace NetDiff.Test
                 baseObj: baseObj,
                 evaluated: evaluatedObject);
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => n.BaseValue!= null));
 
-            Assert.AreEqual(
+            Assert.Equal(
                 expected: 1,
                 actual: result.Count(n => n.EvaluatedValue != null));
         }
