@@ -83,13 +83,37 @@ namespace NetDiff.Test.Integration
             var b = new ObjectWithProperties
             {
                 Number = 2,
-                String = "string"
+                String = "string",
+                SomeIntProperty = 2
             };
 
 
             var result = _calculator.Diff(a, b);
 
             Assert.True(result.ValuesMatch);
+        }
+
+        [Fact]
+        public void ObjectWithDifferenceInPropertyFailsMatches()
+        {
+            var a = new ObjectWithProperties
+            {
+                Number = 2,
+                String = "string",
+                SomeIntProperty = 2
+            };
+
+            var b = new ObjectWithProperties
+            {
+                Number = 2,
+                String = "string",
+                SomeIntProperty = 3
+            };
+
+
+            var result = _calculator.Diff(a, b);
+
+            Assert.False(result.ValuesMatch);
         }
 
         [Fact]
